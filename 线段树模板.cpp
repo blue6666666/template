@@ -67,6 +67,7 @@ int main(){
   }
   return 0;
 }*/
+//区间乘法
 #include<bits/stdc++.h>
 using namespace std;
 #define maxn 1000010
