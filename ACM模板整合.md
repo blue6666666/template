@@ -1,8 +1,8 @@
-# 算法竞赛模板整合
+# ACM模板整合
 
 > The Three Stooges
 ## 📚 目录
-
+- [不要忘记](#不要忘记)
 - [字符串算法](#字符串算法)
 - [数据结构](#数据结构)
 - [图论算法](#图论算法)
@@ -12,6 +12,48 @@
 - [其他算法](#其他算法)
 
 ---
+## 不要忘记 
+### 记得快读快输
+```cpp   
+ios::sync_with_stdio(0); 
+cin.tie(0), cout.tie(0); 
+``` 
+### ！！！数据范围
+```
+    注意爆int
+
+    long long: 8字节，-9,223,372,036,854,775,808到9,223,372,036,854,775,807
+    unsigned long long: 8字节，0到18,446,744,073,709,551,615
+    如果爆long long 就用__int128,但是注意输入输出
+
+    尽量不要使用double输入，容易超时
+```
+### __int128的使用
+```cpp
+#define int __int128
+inline void read(int &n){
+    int x=0,f=1;
+    char ch=getchar();
+    while(ch<'0'||ch>'9'){
+        if(ch=='-') f=-1;
+        ch=getchar();
+    }
+    while(ch>='0'&&ch<='9'){
+        x=(x<<1)+(x<<3)+(ch^48);
+        ch=getchar();
+    }
+    n=x*f;
+}
+inline void print(int n){
+    if(n<0){
+        putchar('-');
+        n*=-1;
+    }
+    if(n>9) print(n/10);
+    putchar(n % 10 + '0');
+}
+#undef int
+```
 ## 字符串算法
 
 ### AC自动机
@@ -349,75 +391,152 @@ int main() {
 ```
 
 ### 主席树（可持久化线段树）
-
 ```cpp
+//对于单点历史修改与查询
 #include<bits/stdc++.h>
 using namespace std;
 #define int long long
 const int maxn=(1e6+1);
-int top,root[maxn],a[maxn],n,m,rt,x,y,mode;
+int top,root[maxn],arr[maxn],n,m,cnt=0;
 struct kkk{
-	int l,r,val;
-}tree[maxn*30];
-int clone(int node){
-	top++;
-	tree[top]=tree[node];//全部信息都传到新节点
-	return top;
+    int l,r,val;
+} a[maxn*30];
+int build(int l,int r){
+    int rt=++cnt;
+    if(l==r)a[rt].val=arr[l];
+    else {
+        int mid=(l+r)>>1;
+        a[rt].l=build(l,mid);
+        a[rt].r=build(mid+1,r);
+    }
+    return rt;
 }
-int maketree(int node,int begin,int end){
-	node=++top;
-	if(begin==end){
-		tree[node].val=a[begin];
-		return top;
-	}
-	int mid=(begin+end)>>1;
-	tree[node].l=maketree(tree[node].l,begin,mid);
-	tree[node].r=maketree(tree[node].r,mid+1,end);
-	return node;
+int update(int ji,int jv,int l,int r,int i)//单点修改
+{
+    int rt=++cnt;
+    a[rt].l=a[i].l;
+    a[rt].r=a[i].r;
+    if(l==r) a[rt].val=jv;
+    else {
+        int mid=(l+r)>>1;
+        if(ji<=mid)a[rt].l=update(ji,jv,l,mid,a[rt].l);
+        else a[rt].r=update(ji,jv,mid+1,r,a[rt].r);
+    }
+    return rt;
 }
-int update(int node,int begin,int end,int x,int val){
-	node=clone(node);	//更新就要新建节点 
-	if(begin==end){
-		tree[node].val=val;
-	}else{
-		int mid=(begin+end)>>1;
-		if(x<=mid)
-			tree[node].l=update(tree[node].l,begin,mid,x,val);	//访问左子树 
-		else
-			tree[node].r=update(tree[node].r,mid+1,end,x,val);	//访问右子树 
-	}
-	return node;
+int query(int ji,int l,int r,int i){
+    if(l==r) return a[i].val;
+    int mid=(l+r)>>1;
+    if(ji<=mid) return query(ji,l,mid,a[i].l);
+    else return query(ji,mid+1,r,a[i].r);
 }
-int query(int node,int begin,int end,int x){
-	if(begin==end){
-		return tree[node].val;
-	}else{
-		int mid=(begin+end)>>1;
-		if(x<=mid)
-			return query(tree[node].l,begin,mid,x);	//访问左子树 
-		else
-			return query(tree[node].r,mid+1,end,x);	//访问右子树 
-	}
+signed main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin>>n>>m;
+    for(int i=1;i<=n;i++){
+        cin>>arr[i];
+    }
+    root[0]=build(1,n);
+    for(int i=1,version,op,x,v;i<=m;i++){
+        cin>>version>>op>>x;
+        if(op==1){
+            cin>>v;
+            root[i]=update(x,v,1,n,root[version]);
+        }else {
+            root[i]=root[version];
+            cout<<query(x,1,n,root[i])<<endl;
+        }
+    }
 }
-    signed main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);  
-	scanf("%lld%lld",&n,&m);
-	for(int i=1;i<=n;i++)scanf("%lld",&a[i]);
-	root[0]=maketree(0,1,n);	//root[i]为i版本的根编号，刚开始编号为0 
-	for(int i=1;i<=m;i++){
-		scanf("%lld%lld%lld",&rt,&mode,&x);
-		if(mode==1){
-			scanf("%lld",&y);
-			root[i]=update(root[rt],1,n,x,y);	//保存版本 
-		}
-		else{
-			printf("%lld\n",query(root[rt],1,n,x));	//输出
-			root[i]=root[rt];					
-		}
-	}
-}
+
+```
+```cpp
+//这个更加重要
+ #include <iostream>
+  #include <cstdio>
+  #include <cstring>
+  #include <algorithm>
+  using namespace std;
+  const int maxn=200001;
+  struct Node{
+      int ls,rs;
+      int cnt;
+ }tr[maxn*20];
+ int cur,rt[maxn];
+ void init(){
+     cur=0;
+ }
+ inline void push_up(int o){
+     tr[o].cnt=tr[tr[o].ls].cnt+tr[tr[o].rs].cnt;
+ }
+ int build(int l,int r){
+     int k=cur++;
+     if (l==r) {
+         tr[k].cnt=0;
+         return k;
+     }
+     int mid=(l+r)>>1;
+     tr[k].ls=build(l,mid);
+     tr[k].rs=build(mid+1,r);
+     push_up(k);
+     return k;
+ }
+ int update(int o,int l,int r,int pos,int val){
+     int k=cur++;
+     tr[k]=tr[o];
+     if (l==pos&&r==pos){
+        tr[k].cnt+=val;
+         return k;
+     }
+     int mid=(l+r)>>1;
+     if (pos<=mid) tr[k].ls=update(tr[o].ls,l,mid,pos,val);
+     else tr[k].rs=update(tr[o].rs,mid+1,r,pos,val);
+     push_up(k);
+     return k;
+ }
+ int query(int l,int r,int o,int v,int kth){
+     if (l==r) return l;
+     int mid=(l+r)>>1;
+    int res=tr[tr[v].ls].cnt-tr[tr[o].ls].cnt;
+     if (kth<=res) return query(l,mid,tr[o].ls,tr[v].ls,kth);
+     else return query(mid+1,r,tr[o].rs,tr[v].rs,kth-res);
+ }
+ int b[maxn];
+ int sortb[maxn];
+ int main()
+ {
+     int n,m;
+    // int T;
+     //scanf("%d",&T);
+     //while (T--){
+     while (~scanf("%d%d",&n,&m)){
+         init();
+         for (int i=1;i<=n;i++){
+             scanf("%d",&b[i]);
+             sortb[i]=b[i];
+         }
+         sort(sortb+1,sortb+1+n);
+         int cnt=1;
+         for (int i=2;i<=n;i++){
+             if (sortb[i]!=sortb[cnt]){
+                 sortb[++cnt]=sortb[i];
+             }
+         }
+         rt[0]=build(1,cnt);
+         for (int i=1;i<=n;i++){
+             int p=lower_bound(sortb+1,sortb+cnt+1,b[i])-sortb;
+             rt[i]=update(rt[i-1],1,cnt,p,1);
+         }
+         for (int i=0;i<m;i++){
+             int a,b,k;
+             scanf("%d%d%d",&a,&b,&k);
+             int idx=query(1,cnt,rt[a-1],rt[b],k);
+             printf("%d\n",sortb[idx]);
+         }
+     }
+     return 0;
+ }
 ```
 
 ### 树状数组
@@ -576,7 +695,7 @@ int main(){
 ### 权值线段树
 
 ```cpp
-/*权值线段树模板
+权值线段树模板
 #define lson pos<<1
 #define rson pos<<1|1
 void build(int pos,int l,int r)
@@ -624,7 +743,7 @@ int kth(int pos,int l,int r,int k)//查询第k大值是多少
 		return kth(rson,mid+1,r,k);
 	else
 		return kth(lson,l,mid,k-mid);
-}*/
+}
 ```
 
 ### 线段树上最值操作
@@ -1465,7 +1584,97 @@ int main(){
 ## 图论算法
 
 ### 最小生成树
+有两种算法，一般使用kruskal
+```cpp
+//prim算法求最小生成树的大小
+#include<bits/stdc++.h>
+using namespace std;
+#define re register
+#define il inline
+il int read()
+{
+    re int x=0,f=1;char c=getchar();
+    while(c<'0'||c>'9'){if(c=='-') f=-1;c=getchar();}
+    while(c>='0'&&c<='9') x=(x<<3)+(x<<1)+(c^48),c=getchar();
+    return x*f;
+}//快读，不理解的同学用cin代替即可
+#define inf 123456789
+#define maxn 5005
+#define maxm 200005
+struct edge
+{
+	int v,w,next;
+}e[maxm<<1];
+//注意是无向图，开两倍数组
+int head[maxn],dis[maxn],cnt,n,m,tot,now=1,ans;
+//已经加入最小生成树的的点到没有加入的点的最短距离，比如说1和2号节点已经加入了最小生成树，那么dis[3]就等于min(1->3,2->3)
+bool vis[maxn];
+//链式前向星加边
+il void add(int u,int v,int w)
+{
+	e[++cnt].v=v;
+	e[cnt].w=w;
+	e[cnt].next=head[u];
+	head[u]=cnt;
+}
+//读入数据
+il void init()
+{
+    n=read(),m=read();
+    for(re int i=1,u,v,w;i<=m;++i)
+    {
+        u=read(),v=read(),w=read();
+        add(u,v,w),add(v,u,w);
+    }
+}
+il int prim()
+{
+	//先把dis数组附为极大值
+	for(re int i=2;i<=n;++i)
+	{
+		dis[i]=inf;
+	}
+    //这里要注意重边，所以要用到min
+	for(re int i=head[1];i;i=e[i].next)
+	{
+		dis[e[i].v]=min(dis[e[i].v],e[i].w);
+	}
+    while(++tot<n)//最小生成树边数等于点数-1
+    {
+        re int minn=inf;//把minn置为极大值
+        vis[now]=1;//标记点已经走过
+        //枚举每一个没有使用的点
+        //找出最小值作为新边
+        //注意这里不是枚举now点的所有连边，而是1~n
+        for(re int i=1;i<=n;++i)
+        {
+            if(!vis[i]&&minn>dis[i])
+            {
+                minn=dis[i];
+				now=i;
+            }
+        }
+        ans+=minn;
+        //枚举now的所有连边，更新dis数组
+        for(re int i=head[now];i;i=e[i].next)
+        {
+        	re int v=e[i].v;
+        	if(dis[v]>e[i].w&&!vis[v])
+        	{
+        		dis[v]=e[i].w;
+        	}
+		}
+    }
+    return ans;
+}
+int main()
+{
+    init();
+    printf("%d",prim());
+    return 0;
+}
 
+```
 ```cpp
 //kruskal
 #include<bits/stdc++.h>
@@ -2291,6 +2500,63 @@ long long mn()
     for(int i=0;i<=63;i++)
         if(place[i]) return place[i];
     return -1;
+}
+```
+```cpp
+//K大异或和
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+using namespace std;
+typedef long long ll;
+ll b[55];
+int flg;
+void insert(ll x) {
+    int i;
+    for(i=50;i>=0;i--) {
+        if(x&(1ll<<i)) {
+            if(b[i]) x^=b[i];
+            else {b[i]=x; return ;}
+        }
+    }
+    if(!x) flg=1;
+}
+void Guass() {
+    int i,j;
+    for(i=50;i>=0;i--) {
+        if(b[i]) {
+            for(j=50;j>=0;j--) {
+                if(i!=j&&(b[j]&(1ll<<i))) {
+                    b[j]^=b[i];
+                }
+            }
+        }
+    }
+}
+int main() {
+    int n,m;
+    scanf("%d",&n);
+    int i;
+    ll x;
+    for(i=1;i<=n;i++) scanf("%lld",&x),insert(x);
+    Guass();
+    int cnt=0;
+    for(i=0;i<=50;i++) {
+        if(b[i]) b[cnt++]=b[i];
+    }
+    scanf("%d",&m);
+    while(m--) {
+        scanf("%lld",&x);
+        if(x>(1ll<<cnt)) {
+            puts("-1"); continue;
+        }
+        x-=flg;
+        ll ans=0;
+        for(i=cnt;i>=0;i--) {
+            if(x&(1ll<<i)) ans^=b[i];
+        }
+        printf("%lld\n",ans);
+    }
 }
 ```
 
@@ -4016,5 +4282,5 @@ signed main() {
          printf("%d\n", fr[i]);
      }
      return 0;
- }
+}
 ```

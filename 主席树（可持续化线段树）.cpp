@@ -84,70 +84,128 @@
      return 0;
  }
 */
+//p3919
+/*
+
 #include<bits/stdc++.h>
 using namespace std;
 #define int long long
 const int maxn=(1e6+1);
-int top,root[maxn],a[maxn],n,m,rt,x,y,mode;
+int top,root[maxn],arr[maxn],n,m,cnt=0;
 struct kkk{
-	int l,r,val;
-}tree[maxn*30];
-int clone(int node){
-	top++;
-	tree[top]=tree[node];//全部信息都传到新节点
-	return top;
+    int l,r,val;
+} a[maxn*30];
+int build(int l,int r){
+    int rt=++cnt;
+    if(l==r)a[rt].val=arr[l];
+    else {
+        int mid=(l+r)>>1;
+        a[rt].l=build(l,mid);
+        a[rt].r=build(mid+1,r);
+    }
+    return rt;
 }
-int maketree(int node,int begin,int end){
-	node=++top;
-	if(begin==end){
-		tree[node].val=a[begin];
-		return top;
-	}
-	int mid=(begin+end)>>1;
-	tree[node].l=maketree(tree[node].l,begin,mid);
-	tree[node].r=maketree(tree[node].r,mid+1,end);
-	return node;
+int update(int ji,int jv,int l,int r,int i)//单点修改
+{
+    int rt=++cnt;
+    a[rt].l=a[i].l;
+    a[rt].r=a[i].r;
+    if(l==r) a[rt].val=jv;
+    else {
+        int mid=(l+r)>>1;
+        if(ji<=mid)a[rt].l=update(ji,jv,l,mid,a[rt].l);
+        else a[rt].r=update(ji,jv,mid+1,r,a[rt].r);
+    }
+    return rt;
 }
-int update(int node,int begin,int end,int x,int val){
-	node=clone(node);	//更新就要新建节点 
-	if(begin==end){
-		tree[node].val=val;
-	}else{
-		int mid=(begin+end)>>1;
-		if(x<=mid)
-			tree[node].l=update(tree[node].l,begin,mid,x,val);	//访问左子树 
-		else
-			tree[node].r=update(tree[node].r,mid+1,end,x,val);	//访问右子树 
-	}
-	return node;
+int query(int ji,int l,int r,int i){
+    if(l==r) return a[i].val;
+    int mid=(l+r)>>1;
+    if(ji<=mid) return query(ji,l,mid,a[i].l);
+    else return query(ji,mid+1,r,a[i].r);
 }
-int query(int node,int begin,int end,int x){
-	if(begin==end){
-		return tree[node].val;
-	}else{
-		int mid=(begin+end)>>1;
-		if(x<=mid)
-			return query(tree[node].l,begin,mid,x);	//访问左子树 
-		else
-			return query(tree[node].r,mid+1,end,x);	//访问右子树 
-	}
+signed main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin>>n>>m;
+    for(int i=1;i<=n;i++){
+        cin>>arr[i];
+    }
+    root[0]=build(1,n);
+    for(int i=1,version,op,x,v;i<=m;i++){
+        cin>>version>>op>>x;
+        if(op==1){
+            cin>>v;
+            root[i]=update(x,v,1,n,root[version]);
+        }else {
+            root[i]=root[version];
+            cout<<query(x,1,n,root[i])<<endl;
+        }
+    }
 }
-    signed main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);  
-	scanf("%lld%lld",&n,&m);
-	for(int i=1;i<=n;i++)scanf("%lld",&a[i]);
-	root[0]=maketree(0,1,n);	//root[i]为i版本的根编号，刚开始编号为0 
-	for(int i=1;i<=m;i++){
-		scanf("%lld%lld%lld",&rt,&mode,&x);
-		if(mode==1){
-			scanf("%lld",&y);
-			root[i]=update(root[rt],1,n,x,y);	//保存版本 
-		}
-		else{
-			printf("%lld\n",query(root[rt],1,n,x));	//输出
-			root[i]=root[rt];					
-		}
-	}
+*/
+//单点修改+范围查询，最重要的模板
+//求范围内第k小的数
+//P3834
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn=200100;
+ll n,m,s,arr[maxn],sorted[maxn],cnt,root[maxn];//sorted 用于离散化,cnt 动态分布编号，详见开点线段树篇
+struct tree{
+    ll l,r,size;//size用于存储排名范围内收集了多少数
+}a[maxn*32];
+ll build(ll l,ll r){
+    int rt=++cnt;
+    a[rt].size=0;
+    if(l<r){
+        ll mid=(l+r)>>1;
+        a[rt].l=build(l,mid);
+        a[rt].r=build(mid+1,r);
+    }
+    return rt;
+}
+ll insert(ll x,ll l,ll r,ll i){
+    int rt=++cnt;
+    a[rt].l=a[i].l;
+    a[rt].r=a[i].r;
+    a[rt].size=a[i].size+1;
+    if(l<r){
+        int mid=(l+r)>>1;
+        if(x<=mid) a[rt].l=insert(x,l,mid,a[rt].l);
+        else a[rt].r=insert(x,mid+1,r,a[rt].r);
+    }
+    return rt;
+}
+void prepare(){
+    cnt=0;
+    for(int i=1;i<=n;i++) sorted[i]=arr[i];
+    sort(sorted+1,sorted+n+1);
+    s=unique(sorted+1,sorted+n+1)-sorted-1;
+    root[0]=build(1,s);
+    for(int i=1;i<=n;i++){
+        ll x=lower_bound(sorted+1,sorted+s+1,arr[i])-sorted;
+        root[i]=insert(x,1,s,root[i-1]);
+    }
+}
+int query(int jk,int l,int r,int u,int v){
+    if(l==r){
+        return l;
+    }
+    int lsize=a[a[v].l].size-a[a[u].l].size;
+    int mid=(l+r)>>1;
+    if(lsize>=jk){
+        return query(jk,l,mid,a[u].l,a[v].l);
+    }else return query(jk-lsize,mid+1,r,a[u].r,a[v].r);
+}
+int main(){
+    cin>>n>>m;
+    for(int i=1;i<=n;i++) cin>>arr[i];
+    prepare();//离散化,并初始化
+    for(int i=1;i<=m;i++){
+        int l,r,k;
+        cin>>l>>r>>k;
+        cout<<sorted[query(k,1,s,root[l-1],root[r])]<<endl;
+    }
+
 }
