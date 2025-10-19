@@ -54,6 +54,18 @@ inline void print(int n){
 }
 #undef int
 ```
+### 快读模板
+```cpp
+#define re register
+#define il inline
+il int read()
+{
+    re int x=0,f=1;char c=getchar();
+    while(c<'0'||c>'9'){if(c=='-') f=-1;c=getchar();}
+    while(c>='0'&&c<='9') x=(x<<3)+(x<<1)+(c^48),c=getchar();
+    return x*f;
+}
+```
 ## 字符串算法
 
 ### AC自动机
@@ -1597,7 +1609,7 @@ il int read()
     while(c<'0'||c>'9'){if(c=='-') f=-1;c=getchar();}
     while(c>='0'&&c<='9') x=(x<<3)+(x<<1)+(c^48),c=getchar();
     return x*f;
-}//快读，不理解的同学用cin代替即可
+}//快读，不理解的用cin代替即可
 #define inf 123456789
 #define maxn 5005
 #define maxm 200005

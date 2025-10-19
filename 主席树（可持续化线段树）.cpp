@@ -146,6 +146,7 @@ signed main(){
 */
 //单点修改+范围查询，最重要的模板
 //求范围内第k小的数
+//空间复杂度O（4*n+nlog（n）+mlog（n））
 //P3834
 #include<bits/stdc++.h>
 using namespace std;
@@ -207,5 +208,4 @@ int main(){
         cin>>l>>r>>k;
         cout<<sorted[query(k,1,s,root[l-1],root[r])]<<endl;
     }
-
 }
