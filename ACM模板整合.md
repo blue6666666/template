@@ -13,6 +13,12 @@
 
 ---
 ## 不要忘记 
+### 若vscode 没有C++环境
+ 找到devC++的mingw 的bin文件夹，加入系统路径
+ 再在vscode中 >edit ui
+ 将路径输入，标准改为14
+ 即可
+
 ### 记得快读快输
 ```cpp   
 ios::sync_with_stdio(0); 
@@ -64,6 +70,38 @@ il int read()
     while(c<'0'||c>'9'){if(c=='-') f=-1;c=getchar();}
     while(c>='0'&&c<='9') x=(x<<3)+(x<<1)+(c^48),c=getchar();
     return x*f;
+}
+```
+### 随机数生成器
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    srand(time(0));
+    int x,y;
+    x=rand()%100;
+    y=rand()%100;
+    cout<<x<<' '<<y<<endl;
+}
+```
+### 对拍器
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int t=0;
+    while(true){
+    cout<<"test: "<<t++<<endl;
+    system("data.exe>data.in");//data.exe 随机数生成器
+    system("std.exe<data.in>data.out");//std.exe 标准程序
+    system("solve.exe<data.in>solve.out");//solve.exe 暴力求解算法
+    if(system("fc std.out solve.out>diff.log")){
+        cout<<"WA"<<endl;
+        break;
+    }
+    
+}
+cout<<"AC\n";
 }
 ```
 ## 字符串算法
