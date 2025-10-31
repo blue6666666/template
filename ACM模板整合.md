@@ -74,14 +74,50 @@ il int read()
 ```
 ### 随机数生成器
 ```cpp
-#include<bits/stdc++.h>
-using namespace std;
-int main(){
-    srand(time(0));
-    int x,y;
-    x=rand()%100;
-    y=rand()%100;
-    cout<<x<<' '<<y<<endl;
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+int Rand(int x, int y) {
+	return uniform_int_distribution<int>(x, y)(rng);
+}
+shuffle(a.begin(), a.end(), rng);
+```
+### 随机图
+```cpp
+// n 为节点个数
+// m 为边的个数，默认为 -1，表示建树
+// root 为根节点编号，默认为 -1，
+vector<array<int,2>> Graph(int n, int m=-1, int root=-1)
+{
+	assert(m==-1 || (n-1<=m && m<=1LL*n*(n-1)/2));
+	assert(root==-1 || (1<=root && root<=n));
+	vector<array<int,2>> E;
+	set<array<int,2>> diff;
+	// 先建一棵以 0 为根的树，然后选根偏移
+	for (int i = 1; i < n; ++i) {
+		E.push_back( { i, Rand(0, i-1) } );
+	}
+	if (root == -1) { root = Rand(0, n-1); }
+	for (auto& [x, y]: E) {
+		x = (x+root) % n + 1;
+		y = (y+root) % n + 1;
+		diff.insert( { x, y } );
+		diff.insert( { y, x } );  // 无向图中需要添加这条反向边
+	}
+	// 从树建图
+	if (m != -1) {
+		for (int i = n-1; i < m; ++i) {
+			while (1) {
+				int x = Rand(1, n);
+				int y = Rand(1, n);
+				if (x == y || diff.count({x,y})) { continue; }
+				E.push_back( { x, y } );
+				diff.insert( { x, y } );
+				diff.insert( { y, x } );  // 无向图中需要添加这条反向边
+				break;
+			}
+		}
+	}
+	shuffle(E.begin(), E.end(), rng);
+	return E;
 }
 ```
 ### 对拍器
@@ -103,6 +139,18 @@ int main(){
 }
 cout<<"AC\n";
 }
+/*
+// checker.cpp
+while (1) {
+	system("A_gen > _data.in");  // linux 下换成 ./xxx
+	system("A_bf < _data.in > A.ans");
+	system("A < _data.in > A.ans");
+	if (system("fc A.out A.ans")) {  // linux 下换成 diff
+		cout << "WA\n"; return 0;
+	} else {
+		cout << "AC\n";
+	}
+}*/
 ```
 ## 字符串算法
 
@@ -1970,6 +2018,7 @@ int main()
 ### 最近公共祖先（LCA）
 
 ```cpp
+//利用树链剖分的方法
 #include<bits/stdc++.h>
 using namespace std;
 const int N=5e5+5;
@@ -2041,7 +2090,82 @@ int main(){
 	return 0;
 }
 ```
-
+```cpp
+//使用链式前向星与tarjan算法的结合
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=5e5+5;
+int cnt=1,head[maxn<<1],n,m,s;
+struct graph{
+	int next,to;
+}g[maxn<<1];
+void add(int u,int v){
+	g[cnt].next=head[u];
+	g[cnt].to=v;
+	head[u]=cnt++;
+}
+//问题列表也可以用链式前向星存储
+int qcnt=1,qhead[maxn<<1],qindex[maxn<<1];
+struct quenstion{
+	int next,to;
+}q[maxn<<1];
+void addq(int u,int v,int i){
+	q[qcnt].next=qhead[u];
+	q[qcnt].to=v;
+	qindex[qcnt]=i;
+	qhead[u]=qcnt++;
+	
+}
+bool vis[maxn];
+int father[maxn];
+int ans[maxn];//答案与问题编号
+void build(){
+	qcnt=cnt=1;
+	for(int i=1;i<=n;i++){
+		head[i]=qhead[i]=0;
+		vis[i]=false;
+		father[i]=i;
+	}
+}
+int find(int x){
+	father[x]=father[x]==x?x:find(father[x]);
+	return father[x];
+}
+void tarjan(int u,int f){
+	vis[u]=true;
+	for(int ei=head[u];ei;ei=g[ei].next){
+		int v=g[ei].to;
+		if(v!=f){
+			tarjan(v,u);
+			father[v]=u;
+		}
+	}
+	for(int ei=qhead[u];ei;ei=q[ei].next){
+		int v=q[ei].to;
+		if(vis[v]) ans[qindex[ei]]=find(v);
+	}
+}
+int main(){
+	cin>>n>>m>>s;
+	build();
+	for(int i=1;i<n;i++){
+		int u,v;
+		cin>>u>>v;
+		add(u,v);
+		add(v,u);
+	}
+	for(int i=1;i<=m;i++){
+		int u,v;
+		cin>>u>>v;
+		addq(u,v,i);
+		addq(v,u,i);
+	}
+	tarjan(s,0);
+	for(int i=1;i<=m;i++){
+		cout<<ans[i]<<endl;
+	}
+}
+```
 ### 树链剖分
 
 ```cpp
@@ -2963,7 +3087,50 @@ signed main() {
 	cout<<"YES\n"; // 打印答案 
 	for(int i = 1 ; i <= n ; i ++) cout<<ans[i]<<' ';
 	return 0;
+    
 }
+/*
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=10000;
+int cnt=1,n,head[maxn],yes[maxn],no[maxn],num[maxn],b[maxn];
+struct graph{
+    int next,to;
+}g[maxn];
+void add(int u,int v){
+    g[cnt].next=head[u];
+    g[cnt].to=v;
+    head[u]=cnt++;
+}
+void dfs(int i){
+    no[i]=0;
+    yes[i]=num[i];
+    for(int ei=head[i],v;ei;ei=g[ei].next){
+        v=g[ei].to;
+        dfs(v);
+        no[i]+=max(yes[v],no[v]);
+        yes[i]+=no[v];
+    }
+}
+int main(){
+    cin>>n;
+    for(int i=1;i<=n;i++) cin>>num[i];
+    for(int i=1;i<n;i++){
+        int u,v;
+        cin>>u>>v;
+        b[u]=1;
+        add(v,u);
+        
+    }
+    for(int i=1;i<=n;i++){
+        if(!b[i]){
+            dfs(i);
+            cout<<max(yes[i],no[i])<<endl;
+            break;
+        }
+    }
+}
+*/
 ```
 
 ---
