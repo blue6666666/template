@@ -20,7 +20,8 @@
  即可
 
 ### 记得快读快输
-```cpp   
+```cpp   \
+
 ios::sync_with_stdio(0); 
 cin.tie(0), cout.tie(0); 
 ``` 
@@ -134,8 +135,7 @@ int main(){
     if(system("fc std.out solve.out>diff.log")){
         cout<<"WA"<<endl;
         break;
-    }
-    
+    } 
 }
 cout<<"AC\n";
 }
@@ -3133,6 +3133,68 @@ int main(){
 */
 ```
 
+### 最长不下降子序列
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+const int N = 1e5+9;
+int n,k,m,a[N],b[N],dp[N],t[N<<2];
+
+void updata(int i,int l,int r,int n,int val){
+    t[i]=max(val,t[i]);
+    if(l==r) return;
+  int mid=(l+r)>>1;
+  if(n<=mid) updata(i<<1,l,mid,n,val);
+  else updata(i<<1|1,mid+1,r,n,val);
+  return;
+}
+int getmax(int i,int l,int r,int nl,int nr){
+  if(l==nl&&r==nr){
+    return t[i];
+  }
+  int mid=(l+r)>>1;
+  if(mid>=nr) return getmax(i<<1,l,mid,nl,nr);
+  else if(mid<nl) return getmax(i<<1|1,mid+1,r,nl,nr);
+  else return max(getmax(i<<1,l,mid,nl,mid),getmax(i<<1|1,mid+1,r,mid+1,nr));
+}
+void solve(){
+    cin>>n>>k;
+    for(int i=1;i<=n;i++)cin>>a[i],b[i]=a[i];
+    // 离散化
+    sort(b+1,b+n+1);
+    m=unique(b+1,b+n+1)-b-1;
+    for(int i=1;i<=n;i++)a[i]=lower_bound(b+1,b+m+1,a[i])-b;
+    for(int i=1;i<=n;i++){
+        dp[i]=getmax(1,1,m,1,a[i])+1;
+        updata(1,1,m,a[i],dp[i]);
+    }
+    //到这里dp 中存储的是以a[i]结尾的最长不下降子序列
+    int ans=0;
+    memset(t,0,sizeof t);
+    for(int i=n;i>k;i--){
+        ans=max(ans,dp[i-k]+k-1+getmax(1,1,m,a[i-k],m)+1); //通过再次利用线段树找到往后最长（题目要求）
+        int tem=getmax(1,1,m,a[i],m)+1;
+        updata(1,1,m,a[i],tem);
+    }
+    ans=max(ans,k+getmax(1,1,m,a[k+1],m));
+    cout<<ans<<'\n';
+}
+
+// 1 2 3 ... i-k i-k+1 i-k+2 i-k+3 ... i ...
+
+int main(){
+    ios::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr);
+    int q=1;
+    //cin>>q;
+    while(q--){
+        solve();
+    }
+    return 0;
+}
+
+```
 ---
 
 ## 计算几何
@@ -3943,6 +4005,74 @@ vector<long double> area_union(const vector<Circle> &circs)
 ---
 
 ## 其他算法
+### 并查集
+```cpp
+
+//推导部分和
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll N=1e5+10;
+struct tree{
+  ll n,w,to;
+}e[N<<1];
+ll head[N<<1],tot,fa[N],vis[N],sum[N];
+void add(int u,int v,ll w){
+  e[tot].to=v;
+  e[tot].n=head[u];
+  e[tot].w=w;
+  head[u]=tot++;
+}
+int find(int i){
+  if(fa[i]!=i) return fa[i]=find(fa[i]);
+  return i;
+}
+void unite(int x,int y){
+  x=find(x);
+  y=find(y);
+  if(x!=y) fa[x]=y;
+}
+void bfs(int x){
+  vis[x]=1;
+  queue<int>q; q.push(x);
+  sum[x]=0;
+  while(!q.empty()){
+    int u=q.front();
+    q.pop();
+    for(int i=head[u];i!=-1;i=e[i].n){
+      int v=e[i].to;
+      if(vis[v]) continue;
+      vis[v]=1;
+      sum[v]=sum[u]+e[i].w;
+      q.push(v);
+    }
+  }
+}
+int main()
+{
+  memset(head,-1,sizeof(head));
+  int n,m,q;
+  cin>>n>>m>>q;
+  for(int i=1;i<=n;i++) fa[i]=i;
+  for(int i=1;i<=m;i++){
+    ll l,r,w;
+    cin>>l>>r>>w;
+    add(l-1,r,w);
+    add(r,l-1,-w);
+    unite(l-1,r);
+  }
+  for(int i=0;i<=n;i++){
+    if(!vis[i]) bfs(i);
+  }
+  for(int i=1;i<=m;i++){
+    int l,r;
+    cin>>l>>r;
+    if(find(l-1)!=find(r)) cout<<"UNKNOWN"<<endl;
+    else cout<<sum[r]-sum[l-1]<<endl;
+  }
+  return 0;
+}
+```
 
 ### FFT（快速傅里叶变换）
 
@@ -4361,62 +4491,22 @@ int main(){
 ### 优先队列（堆）
 
 ```cpp
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <deque>
-using namespace std;
-using LL = long long;
-struct node{
-    LL val;
-    int pos;
-};
- 
-int main(){
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr);cout.tie(nullptr);
-	int n,m,d;
-    cin>>n>>m>>d;
-    vector<LL> arr[2]; 
-    arr[0].resize(n,0);arr[1].resize(n);
-    int cur=0,next;
-    deque<node> deq;
-    LL a,b,t=0,pret=0;
-    for(int j=0;j<m;j++){
-        next=cur^1;
-        pret=t;
-        cin>>a>>b>>t;
-        deq.clear();
-        LL l,r;
-        l=0;r=min(d*(t-pret),(LL)n-1);
-        for(int i=(int)l;i<r;i++){
-            while(!deq.empty()&&deq.back().val<=arr[cur][i]){
-                deq.pop_back();
-            }
-            deq.push_back({arr[cur][i],i});
-        }
-        for(int i=0;i<n;i++){
-            //弹出队头
-            l=max((LL)0,i-d*(t-pret));
-            if(!deq.empty()&&deq.front().pos<l) deq.pop_front();
-            //压入队尾
-            r=min(i+d*(t-pret),(LL)n-1);
-            while(!deq.empty()&&deq.back().val<=arr[cur][r]){
-                deq.pop_back();
-            }
-            deq.push_back({arr[cur][r],(int)r});
-            //更新答案
-            arr[next][i]=deq.front().val+b*abs(i+1-a);
-        }
-        cur=next;
-    } 
-    LL ans=-1e6;
-    for(int i=0;i<n;i++){
-        ans=max(ans,arr[cur][i]);
+//自定义类的优先队列
+struct Student {
+    std::string name;
+    int score;
+    int age;
+    
+    // 重载 < 运算符，用于大根堆（按score从大到小）
+    bool operator<(const Student& other) const {
+        // 注意：priority_queue默认用 < 比较，但实际表现是最大堆
+        // 所以这里返回 true 表示优先级更低
+        return score < other.score;  // 大根堆
     }
-    cout<<ans;
-    return 0;
-}
+};
+priority_queue<Student>q1;//大根堆
+priority_queue<int>q2;//默认大根堆
+priority_queue<int,vector<int>,greater<int>>q3;//小根堆
 ```
 
 ### 扫描线+线段树（矩形面积并）
