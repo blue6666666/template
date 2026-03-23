@@ -376,7 +376,77 @@ void clear()
     cnt=1;
 }
 ```
+### string常用函数
+```cpp
+三、基本属性
+s.size();      // 长度（常用）
+s.length();    // 同 size()
+s.empty();     // 是否为空
+四、访问与修改
+s[i];          // 访问（不检查越界）
+s.at(i);       // 访问（会检查越界）
 
+s.front();     // 第一个字符
+s.back();      // 最后一个字符
+五、拼接与修改
+1. 拼接
+s += "abc";
+s = s + "abc";
+2. 插入
+s.insert(2, "abc");   // 在下标2插入
+3. 删除
+s.erase(2, 3);        // 从下标2开始删除3个字符
+4. 替换
+s.replace(2, 3, "abc");   // 替换区间
+六、子串操作
+string t = s.substr(pos, len);  // 从pos开始，长度len
+
+示例：
+
+string s = "abcdef";
+s.substr(2, 3);   // "cde"
+七、查找操作（重点）
+1. 查找子串
+s.find("abc");     // 返回第一次出现的位置
+
+找不到返回：
+
+string::npos
+
+示例：
+
+if (s.find("abc") != string::npos) {
+    // 找到了
+}
+2. 反向查找
+s.rfind("abc");    // 从后往前找
+3. 查找字符
+s.find('a');
+八、比较
+if (s == t) {}
+if (s < t) {}   // 字典序比较
+
+底层是字典序（lexicographical order）
+
+九、排序
+#include <algorithm>
+
+sort(s.begin(), s.end());
+
+示例：
+
+string s = "dcba";
+sort(s.begin(), s.end());  // "abcd"
+十、反转
+reverse(s.begin(), s.end());
+十一、大小写转换
+#include <cctype>
+
+for (char &c : s) c = toupper(c);
+for (char &c : s) c = tolower(c);
+十二、统计字符
+int cnt = count(s.begin(), s.end(), 'a');
+```
 ---
 
 ## 数据结构
@@ -2683,7 +2753,160 @@ int main(){
     return 0;
 }
 ```
+### tarjan(强连通分量)
+```cpp
+//强连通分量求解
+int dfn[N], low[N], dfncnt, s[N], in_stack[N], tp;
+int scc[N], sc;  // 结点 i 所在 SCC 的编号
+int sz[N];       // 强连通 i 的大小
 
+void tarjan(int u) {
+  low[u] = dfn[u] = ++dfncnt, s[++tp] = u, in_stack[u] = 1;
+  for (int i = h[u]; i; i = e[i].nex) {
+    const int &v = e[i].t;
+    if (!dfn[v]) {
+      tarjan(v);
+      low[u] = min(low[u], low[v]);
+    } else if (in_stack[v]) {
+      low[u] = min(low[u], dfn[v]);
+    }
+  }
+  if (dfn[u] == low[u]) {
+    ++sc;
+    do {
+      scc[s[tp]] = sc;
+      sz[sc]++;
+      in_stack[s[tp]] = 0;
+    } while (s[tp--] != u);
+  }
+}
+```
+```cpp
+#include <bits/stdc++.h>
+#define N 100010  // 定义数组最大长度，适配题目中N≤1e4的范围（留有余量）
+using namespace std;
+struct graph{
+    int t,nex;
+}e[N*2];
+//强连通分量求解
+int dfn[N], low[N], dfncnt, s[N], in_stack[N], tp,cnt=1,h[N*2];
+int scc[N], sc;  // 结点 i 所在 SCC 的编号
+int sz[N];       // 强连通 i 的大小
+int out[N];
+void add(int u,int v){
+    e[cnt].nex=h[u];
+    e[cnt].t=v;
+    h[u]=cnt++;
+}
+//求每个分量出度
+for (int i = 1; i <= n; i++) {
+        // 遍历i的所有邻接节点v
+        for (int j = h[i]; j ; j=e[i].nex) {
+            int v = e[i].t
+            // 如果i和v属于不同的强连通分量 → 说明缩点后i的分量有一条出边到v的分量
+            if (scc[i]!=scc[v]) {
+                out[scc[i]]++;  // i所属分量的出度+1
+            }
+        }
+}
+```
+### 边双连通分量
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <stack>
+#include <vector>
+
+using namespace std;
+constexpr int N = 5e5 + 5, M = 2e6 + 5;
+int n, m;
+
+struct edge {
+  int to, nt;
+} e[M << 2];
+
+int hd[N << 1], tot = 1;
+
+void add(int u, int v) { e[++tot] = edge{v, hd[u]}, hd[u] = tot; }
+
+void uadd(int u, int v) { add(u, v), add(v, u); }
+
+int bfncnt, sum;
+int dfn[N], low[N],bcc[N],bcc_cnt;
+bool vis[N];
+vector<vector<int>> ans;
+stack<int> st;
+void tarjan(int u, int in) {
+  low[u] = dfn[u] = ++dfncnt;
+  st.push(u), vis[u] = true;
+  for (int i = hd[u]; i; i = e[i].nt) {
+    int v = e[i].to;
+    if (i == (in ^ 1)) continue;
+    if (!dfn[v])
+      tarjan(v, i), low[u] = min(low[u], low[v]);
+    else if (vis[v])
+      low[u] = min(low[u], dfn[v]);
+  }
+  if (dfn[u] == low[u]) {
+    bcc_cnt++;
+    bcc[u]=bcc_cnt;
+    vector<int> t;
+    t.push_back(u);
+    while (st.top() != u)
+      t.push_back(st.top()), bcc[st.top()]=bcc_cnt,vis[st.top()] = false, st.pop();
+    st.pop(), ans.push_back(t);
+  }
+}
+```
+### 割边
+```cpp
+
+void tarjan(int u,int pre) {
+  low[u] = dfn[u] = ++dfncnt;
+  for (int ei = head[u]; ei; ei = e[ei].nex) {
+    if((ei^1)==pre) continue;
+    const int &v = e[ei].t;
+    if (!dfn[v]) {
+      tarjan(v,ei);
+      
+      low[u] = min(low[u], low[v]);
+      if(low[v]>dfn[u]){
+        cutedge[ei>>1]=1;//无向图割边
+        ans1++;
+      }
+    } else  {
+      low[u] = min(low[u], dfn[v]);
+    }
+  }
+}
+```
+### 点双连通分量
+```cpp
+
+void tarjan(int u) {
+  dfn[u] = low[u] = ++bcc_cnt, sta[++top] = u;
+  if (u == root && hd[u] == 0) { //root=i;
+    dcc[++cnt].push_back(u);
+    return;
+  }
+  int f = 0;
+  for (int i = hd[u]; i; i = e[i].nt) {
+    int v = e[i].to;
+    if (!dfn[v]) {
+      tarjan(v);
+      low[u] = min(low[u], low[v]);
+      if (low[v] >= dfn[u]) {
+        if (++f > 1 || u != root) cut[u] = true;
+        cnt++;
+        do dcc[cnt].push_back(sta[top--]);
+        while (sta[top + 1] != v);
+        dcc[cnt].push_back(u);
+      }
+    } else
+      low[u] = min(low[u], dfn[v]);
+  }
+}
+```
 ---
 
 ## 数论算法
