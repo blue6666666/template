@@ -68,7 +68,7 @@ int count(int p){
    }
    return sum;
 }
-void add(int p,int x,int n){
+void add(int p,int x,int n){//对区间内每个数加一个数
    while(p<=n){
    b[p]+=x;
    p+=lowbit(p);
