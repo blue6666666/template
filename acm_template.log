@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.7.27)  16 AUG 2026 08:44
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.7.27)  18 AUG 2026 09:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1235,30 +1235,35 @@ Underfull \vbox (badness 5490) has occurred while \output is active []
  [10]
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
+
+Underfull \vbox (badness 5490) has occurred while \output is active []
+
  [11]
-Underfull \vbox (badness 1168) has occurred while \output is active []
+Underfull \vbox (badness 1248) has occurred while \output is active []
 
  [12]
 Underfull \vbox (badness 1248) has occurred while \output is active []
 
 
-Underfull \vbox (badness 5490) has occurred while \output is active []
+Underfull \vbox (badness 1248) has occurred while \output is active []
 
  [13]
-[14]
+Underfull \vbox (badness 1248) has occurred while \output is active []
+
+ [14]
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 5490) has occurred while \output is active []
 
  [15]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Underfull \vbox (badness 5050) has occurred while \output is active []
+Underfull \vbox (badness 1248) has occurred while \output is active []
 
  [16]
-Underfull \vbox (badness 5490) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Underfull \vbox (badness 5490) has occurred while \output is active []
@@ -1267,28 +1272,23 @@ Underfull \vbox (badness 5490) has occurred while \output is active []
 Underfull \vbox (badness 1248) has occurred while \output is active []
 
  [18]
+[19]
 Underfull \vbox (badness 1248) has occurred while \output is active []
 
- [19]
+
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
  [20]
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
-
-Underfull \vbox (badness 5490) has occurred while \output is active []
-
  [21]
-Underfull \vbox (badness 1248) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [22]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Underfull \vbox (badness 5490) has occurred while \output is active []
-
  [23]
-Underfull \vbox (badness 5490) has occurred while \output is active []
+Underfull \vbox (badness 1248) has occurred while \output is active []
 
 
 Underfull \vbox (badness 5490) has occurred while \output is active []
@@ -1296,23 +1296,24 @@ Underfull \vbox (badness 5490) has occurred while \output is active []
  [24]
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [25]
+Underfull \vbox (badness 1248) has occurred while \output is active []
+
+
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
  [26]
-Underfull \vbox (badness 1248) has occurred while \output is active []
-
- [27]
-Underfull \vbox (badness 5490) has occurred while \output is active []
-
-
+[27]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [28]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 1248) has occurred while \output is active []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 1248) has occurred while \output is active []
 
  [29]
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1335,50 +1336,54 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [32]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [33]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Underfull \vbox (badness 1248) has occurred while \output is active []
-
- [34]
-Overfull \hbox (69.98495pt too wide) in paragraph at lines 5214--5215
-[][][][] 
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [34]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-Overfull \hbox (69.98495pt too wide) in paragraph at lines 5292--5293
+ [35]
+Underfull \vbox (badness 5490) has occurred while \output is active []
+
+
+Overfull \hbox (69.98495pt too wide) in paragraph at lines 5493--5494
 [][][][] 
  []
 
 
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
- [35]
-Underfull \vbox (badness 1248) has occurred while \output is active []
-
-
-Underfull \vbox (badness 1248) has occurred while \output is active []
-
  [36]
+Overfull \hbox (69.98495pt too wide) in paragraph at lines 5571--5572
+[][][][] 
+ []
+
+
 Underfull \vbox (badness 5490) has occurred while \output is active []
 
 
-Underfull \vbox (badness 1248) has occurred while \output is active []
+Underfull \vbox (badness 5490) has occurred while \output is active []
 
  [37]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [38]
-[39
+Underfull \vbox (badness 1168) has occurred while \output is active []
 
-] (acm_template.aux)
+
+Underfull \vbox (badness 5490) has occurred while \output is active []
+
+ [39]
+Underfull \vbox (badness 5490) has occurred while \output is active []
+
+ [40]
+(acm_template.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026/07/22>
@@ -1388,15 +1393,15 @@ L3 programming layer <2026/07/22>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `acm_template.out' has not changed.
-(rerunfilecheck)             Checksum: 7631413CC7E26A8936A53094D3ADCF0C;12042.
+(rerunfilecheck)             Checksum: 919B124C635233E7EB4000EDE5686911;12255.
  ) 
 Here is how much of TeX's memory you used:
- 20115 strings out of 402987
- 410341 string characters out of 5448524
- 2577759 words of memory out of 5000000
- 48537 multiletter control sequences out of 15000+600000
+ 20533 strings out of 402987
+ 414069 string characters out of 5448524
+ 2380759 words of memory out of 5000000
+ 48955 multiletter control sequences out of 15000+600000
  635164 words of font info for 143 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  93i,13n,111p,429b,2012s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on acm_template.pdf (39 pages).
+Output written on acm_template.pdf (40 pages).

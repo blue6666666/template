@@ -1529,15 +1529,16 @@ int main(){
 
 \algo{虚树的构建}
 \begin{lstlisting}
-//二次排序+lca连边
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn=1e5+10;
 int h[maxn<<1],ne[maxn<<1],to[maxn<<1],tot1;//初始树
 int n,q,k;
-int hn[maxn],nn[maxn],tn[maxn],tot2;//新树
+int hn[maxn<<1],nn[maxn<<1],tn[maxn<<1],tot2;//新树
 int dep[maxn],st[maxn][20],dfn[maxn],dfncnt;
 vector<int>arr,tmp;//关键点
+bool iskey[maxn];
+int cost[maxn],siz[maxn];
 bool cmp(int x,int y){
     return dfn[x]<dfn[y];
 }
@@ -1551,8 +1552,38 @@ void add2(int u,int v){
     tn[tot2]=v;
     hn[u]=tot2;
 }
-
-void buildvtree(){
+void dfs(int u,int f){
+    dep[u]=dep[f]+1;
+    dfn[u]=++dfncnt;
+    st[u][0]=f;
+    for(int i=1;i<20;i++){
+        st[u][i]=st[st[u][i-1]][i-1];
+    }
+    for(int e=h[u];e;e=ne[e]){
+        int v=to[e];
+        if(v==f) continue;
+        dfs(v,u);
+    }
+}
+int getlca(int u,int v){
+    if(dep[u]!=dep[v]){
+        if(dep[u]<dep[v]) swap(u,v);
+        for(int p=19;p>=0;p--){
+            if(dep[st[u][p]]>=dep[v]){
+                u=st[u][p];
+            }
+        }
+    }
+    if(u==v) return u;
+    for(int p=19;p>=0;p--){
+        if(st[u][p]!=st[v][p]){
+            u=st[u][p];
+            v=st[v][p];
+        }
+    }
+    return st[u][0];
+}
+int buildvtree(){
     sort(arr.begin(),arr.end(),cmp);
     tmp=arr;
     for(int i=0;i<(int)arr.size()-1;i++){
@@ -1567,6 +1598,7 @@ void buildvtree(){
     for(int i=0;i<tmp.size()-1;i++){
         add2(getlca(tmp[i],tmp[i+1]),tmp[i+1]);
     }
+    return tmp[0];
 }
 \end{lstlisting}
 
@@ -3272,6 +3304,232 @@ for(int i = 2; i <= n; i++){
 }
 \end{lstlisting}
 
+\algo{位运算的部分性质}
+\begin{lstlisting}
+1. 基本代数性质
+交换律
+c
+a & b == b & a
+a | b == b | a
+a ^ b == b ^ a
+结合律
+c
+(a & b) & c == a & (b & c)
+(a | b) | c == a | (b | c)
+(a ^ b) ^ c == a ^ (b ^ c)
+幂等律
+c
+a & a == a
+a | a == a
+a ^ a == 0
+注意：异或不是幂等的。
+
+单位元、零元
+运算	单位元	零元
+&	M 全 1	0
+|	0	M 全 1
+^	0	无零元，每个数的逆元是自身
+例如：
+
+c
+a & M == a
+a | 0 == a
+a ^ 0 == a
+a ^ a == 0
+互补律
+c
+a & ~a == 0
+a | ~a == M
+a ^ ~a == M
+双重非
+c
+~~a == a
+吸收律
+c
+a & (a | b) == a
+a | (a & b) == a
+分配律
+c
+a & (b | c) == (a & b) | (a & c)
+a | (b & c) == (a | b) & (a | c)
+a & (b ^ c) == (a & b) ^ (a & c)
+注意：^ 对 & 一般没有分配律，即：
+
+c
+a ^ (b & c) != (a ^ b) & (a ^ c)
+德摩根定律
+c
+~(a & b) == ~a | ~b
+~(a | b) == ~a & ~b
+异或取反也有常用转换：
+
+c
+~(a ^ b) == ~a ^ b == a ^ ~b
+~a ^ ~b == a ^ b
+2. 与、或、非、异或之间的转换
+与和或互相转换
+c
+a | b == ~(~a & ~b)
+a & b == ~(~a | ~b)
+异或用与、或、非表示
+c
+a ^ b == (a | b) & ~(a & b)
+a ^ b == (a & ~b) | (~a & b)
+a ^ b == (a | b) ^ (a & b)
+a ^ b == (a | b) - (a & b)
+或、与用异或表示
+c
+a | b == a ^ b ^ (a & b)
+a & b == a ^ b ^ (a | b)
+非与加减法的关系
+c
+~a == -a - 1
+-a == ~a + 1
+a + ~a == M
+a ^ M == ~a
+3. 与算术运算的关系
+加法
+c
+a + b == (a ^ b) + 2 * (a & b)
+a + b == (a | b) + (a & b)
+其中：
+
+a ^ b 是不考虑进位的和；
+
+a & b 是进位。
+
+减法
+c
+a - b == a + ~b + 1
+-a == ~a + 1
+与、或、异或的算术关系
+c
+a | b == a + b - (a & b)
+a & b == a + b - (a | b)
+a ^ b == a + b - 2 * (a & b)
+
+a & b == (a + b - (a ^ b)) / 2
+a | b == (a + b + (a ^ b)) / 2
+不重叠位的加法
+如果：
+
+c
+a & b == 0
+那么：
+
+c
+a + b == a | b == a ^ b
+4. 移位与乘除的关系
+左移
+c
+a << n == a * 2^n
+在固定位宽中相当于对 2^w 取模。
+
+右移
+对于无符号数或非负数：
+
+c
+a >> n == a / 2^n   // 向下取整
+对于有符号补码数，算术右移等价于向下取整：
+
+c
+a >> n == floor(a / 2^n)
+例如 -3 >> 1 == -2，而不是 C/C++ 中 -3 / 2 == -1，因为 C 语言除法向零取整。
+
+取模 2^n
+c
+a % 2^n == a & ((1 << n) - 1)
+清零低 n 位
+c
+a & ~((1 << n) - 1)
+循环移位
+以位宽 w 为例：
+
+c
+// 循环左移 n 位
+(a << n) | (a >>> (w - n))
+
+// 循环右移 n 位
+(a >>> n) | (a << (w - n))
+5. 位运算与集合表示
+一个整数的二进制位可以表示一个集合：第 i 位为 1 表示元素 i 在集合中。
+
+c
+交集：  a & b
+并集：  a | b
+对称差：a ^ b
+补集：  ~a & M
+差集：  a & ~b
+判断子集：
+
+c
+a 是 b 的子集： (a & b) == a
+            或： (a | b) == b
+            或： (a & ~b) == 0
+集合操作：
+
+c
+判断元素 i：   (a >> i) & 1
+添加元素 i：   a | (1 << i)
+删除元素 i：   a & ~(1 << i)
+翻转元素 i：   a ^ (1 << i)
+枚举一个集合的所有子集：
+
+c
+for (int s = a; s; s = (s - 1) & a) {
+    // s 是 a 的一个非空子集
+}
+// 最后还要处理空集 0
+6. 常用位操作恒等式
+目标	表达式
+判断奇偶	x & 1
+乘 2	x << 1
+除 2	x >> 1
+判断是否为 2 的幂	x > 0 && (x & (x - 1)) == 0
+获取第 k 位	(x >> k) & 1
+设置第 k 位为 1	x | (1 << k)
+清除第 k 位	x & ~(1 << k)
+翻转第 k 位	x ^ (1 << k)
+取最低位 1	x & -x
+清除最低位 1	x & (x - 1)
+取最低位 0	~x & (x + 1)
+将最低位 0 变为 1	x | (x + 1)
+将末尾连续 1 清零	x & (x + 1)
+将末尾连续 0 置 1	x | (x - 1)
+得到最低位 1 及以下全 1 掩码	x ^ (x - 1)
+判断相等	(a ^ b) == 0
+交换 a、b	a ^= b; b ^= a; a ^= b;
+平均值防溢出	(a & b) + ((a ^ b) >> 1)
+相反数	-x == ~x + 1
+绝对值，w 位有符号数	mask = x >> (w - 1); abs = (x ^ mask) - mask;
+统计 1 的个数	while (x) { x &= x - 1; count++; }
+7. 注意事项
+有符号与无符号
+右移分算术右移和逻辑右移。算术右移补符号位，逻辑右移补 0。
+
+移位位数
+C/C++ 中移位位数超过等于位宽是未定义行为；Java 等语言会取模。
+
+优先级
+位运算优先级容易出错，建议始终加括号，例如：
+
+c
+if ((x & 1) == 0)
+补码性质
+补码下：
+
+-x == ~x + 1
+~x == -x - 1
+逻辑运算与位运算不同
+&&、||、! 是逻辑运算，结果只有 0 或 1，且会短路；
+&、|、^、~ 是按位运算。
+如果 x,y 只取 0/1，则：
+
+x && y == x & y
+x || y == x | y
+!x == x ^ 1 == 1 - x
+\end{lstlisting}
+
 \section{字符串}
 
 \algo{前缀函数与KMP}
@@ -4083,6 +4341,27 @@ int main(){
 \end{lstlisting}
 
 \section{计算几何}
+
+\algo{define}
+\begin{lstlisting}
+using ll = long long;
+using db = double;
+using T = ll;   // 或者 double
+
+// 如果 T 是整数
+int sgn(ll x) {
+    return (x > 0) - (x < 0);
+}
+
+// 如果 T 是浮点数，用这个版本
+/*
+const double eps = 1e-9;
+int sgn(double x) {
+    if (fabs(x) < eps) return 0;
+    return x < 0 ? -1 : 1;
+}
+*/
+\end{lstlisting}
 
 \algo{向量}
 \begin{lstlisting}
