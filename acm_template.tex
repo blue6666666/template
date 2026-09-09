@@ -147,6 +147,8 @@ __lg(i);  // i 最多 32 位
 
 \algo{高精度}
 \begin{lstlisting}
+cout << fixed << setprecision(15);//输出精度
+
 istream& operator>> (istream& is, __int128 &x)
 {
 	string s; is>>s;
@@ -365,6 +367,7 @@ while (1) {
 
 \algo{对顶multiset}
 \begin{lstlisting}
+//对顶 multiset 数据结构主要用于动态维护一组数的中位数（或第 k 小/大等顺序统计量）
 struct PairingMultiset {
     int sz;
     multiset <int> minH, maxH;
@@ -1006,7 +1009,7 @@ int main(){
 
 \algo{权值线段树}
 \begin{lstlisting}
-权值线段树模板
+//权值线段树模板
 #define lson pos<<1
 #define rson pos<<1|1
 void build(int pos,int l,int r)
@@ -1523,6 +1526,124 @@ int main(){
             num[ans]=-1;
         }
     }
+    }
+}
+
+//进一步，删除任意一个节点
+//P4971
+#include<bits/stdc++.h>
+using namespace std;
+#define  int long long 
+const int maxn=2000100;
+int n,m;
+int num[maxn],father[maxn],lef[maxn],righ[maxn],dis[maxn],up[maxn];
+int t,w,k;
+// up数组存储的就是节点真正的父节点
+void prepare(){
+    dis[0]=-1;
+    for(int i=1;i<=n;i++){
+        dis[i]=lef[i]=righ[i]=up[i]=0;
+        father[i]=i;
+    }
+}
+int find(int i){
+    father[i]=father[i]==i?i:find(father[i]);
+    return father[i];
+}
+int merge(int i,int j){
+    if(i==0||j==0){
+        return i+j;
+    }
+    //这段代码是维护的大根堆
+    if(num[i]<num[j]||(num[i]==num[j]&&i>j)){
+        swap(i,j);
+    }
+    righ[i]=merge(righ[i],j);
+    up[righ[i]]=i;//多了一句
+    if(dis[lef[i]]<dis[righ[i]]){
+        swap(lef[i],righ[i]);
+    }
+    dis[i]=dis[righ[i]]+1;
+    father[lef[i]]=father[righ[i]]=i;
+    return i;
+}
+//删除任意节点，返回整棵树的头节点
+//这是主要的改动
+int remove(int i){
+    int h=find(i);
+    father[lef[i]]=lef[i];
+    father[righ[i]]=righ[i];
+    int s=merge(lef[i],righ[i]);
+    int f=up[i];
+    father[i]=s;
+    up[s]=f;
+    if(h!=i){
+        father[s]=h;
+        if(lef[f]==i) lef[f]=s;
+        else righ[f]=s;
+        for(int d=dis[s];dis[f]>d+1;f=up[f],d++){// log(n)
+            if(dis[lef[f]]<dis[righ[f]]){
+                swap(lef[f],righ[f]);
+            }
+            dis[f]=d+1;
+        }
+    }
+    up[i]=lef[i]=righ[i]=dis[i]=0;
+    return father[s];
+}
+void reduce(int i,int v){
+    int h=remove(i);
+    num[i]=max((int)0,num[i]-v);
+    father[h]=father[i]=merge(h,i);
+}
+int compute(){
+    int ans=0,mx=0;
+    for(int i=1;i<=n;i++){
+        if(father[i]==i) {
+            ans+=num[i];
+            mx=max(num[i],mx);
+        }
+    }
+    if(w==2) ans-=mx;
+    else if(w==3) ans+=mx;
+    return ans;
+}
+void solve(){
+    cin>>n>>m;
+    prepare();
+    for(int i=1;i<=n;i++){
+        cin>>num[i];
+    }
+    for(int i=1;i<=m;i++){
+        int op;
+        cin>>op;
+        if(op==2){
+            int x;
+            cin>>x;
+            reduce(x,num[x]);
+        }else if(op==3){
+            int x,y;
+            cin>>x>>y;
+            reduce(find(x),y);
+        }else {
+            int x,y;
+            cin>>x>>y;
+            x=find(x),y=find(y);
+            if(x!=y) merge(x,y);
+        }
+    }
+    int ans=compute();
+    if(ans==0) cout<<"Gensokyo"<<' ';
+    else if(ans>k) cout<<"Hell"<<' ';
+    else cout<<"Heaven"<<' ';
+    cout<<ans<<endl;
+}
+signed main(){
+ios::sync_with_stdio(0); 
+cin.tie(0), cout.tie(0); 
+    cin>>t>>w>>k;
+    while(t--){
+        solve();
     }
 }
 \end{lstlisting}
@@ -2690,6 +2811,19 @@ void tarjan(int u, int in) {
 
 \algo{割边}
 \begin{lstlisting}
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=1e5+10;
+int n,m;
+int dfn[maxn],low[maxn],dfncnt,cutedge[maxn<<1],tot=1,head[maxn<<1],ans1;
+struct graph{
+    int t,nex;
+}e[maxn<<1];
+void add(int u,int v){
+    e[++tot].t=v;
+    e[tot].nex=head[u];
+    head[u]=tot;
+}
 void tarjan(int u,int pre) {
   low[u] = dfn[u] = ++dfncnt;
   for (int ei = head[u]; ei; ei = e[ei].nex) {
@@ -2708,13 +2842,52 @@ void tarjan(int u,int pre) {
     }
   }
 }
+int main(){
+    cin>>n>>m;
+    for(int i=1;i<=m;i++){
+        int u,v;
+        cin>>u>>v;
+        add(u,v);
+        add(v,u);
+    }
+    for(int i=1;i<=n;i++){
+        if(!dfn[i]) tarjan(i,0);
+    }
+    cout<<ans1<<endl;
+    for(int i=1;i<=m;i++){
+        if(cutedge[i]) cout<<i<<' ';
+    }
+}
 \end{lstlisting}
 
 \algo{点双连通分量}
 \begin{lstlisting}
+#include <iostream>
+#include <vector>
+using namespace std;
+constexpr int N = 5e5 + 5, M = 2e6 + 5;
+int n, m;
+
+struct edge {
+  int to, nt;
+} e[M << 1];
+
+int hd[N], tot = 1;
+
+void add(int u, int v) { e[++tot] = edge{v, hd[u]}, hd[u] = tot; }
+
+void uadd(int u, int v) { add(u, v), add(v, u); }
+
+int ans;
+int dfn[N], low[N], bcc_cnt;
+int sta[N], top, cnt;
+bool cut[N];
+vector<int> dcc[N];
+int root;
+
 void tarjan(int u) {
   dfn[u] = low[u] = ++bcc_cnt, sta[++top] = u;
-  if (u == root && hd[u] == 0) { //root=i;
+  if (u == root && hd[u] == 0) {
     dcc[++cnt].push_back(u);
     return;
   }
@@ -2734,6 +2907,25 @@ void tarjan(int u) {
     } else
       low[u] = min(low[u], dfn[v]);
   }
+}
+
+int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> n >> m;
+  int u, v;
+  for (int i = 1; i <= m; i++) {
+    cin >> u >> v;
+    if (u != v) uadd(u, v);
+  }
+  for (int i = 1; i <= n; i++)
+    if (!dfn[i]) root = i, tarjan(i);
+  cout << cnt << '\n';
+  for (int i = 1; i <= cnt; i++) {
+    cout << dcc[i].size() << ' ';
+    for (int j = 0; j < dcc[i].size(); j++) cout << dcc[i][j] << ' ';
+    cout << '\n';
+  }
+  return 0;
 }
 \end{lstlisting}
 
@@ -5355,6 +5547,88 @@ vector<long double> area_union(const vector<Circle> &circs)
 \end{lstlisting}
 
 \section{其它}
+
+\algo{CDQ分治}
+\begin{lstlisting}
+//3810
+
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=1e5+10;
+const int maxk=2e5+10;
+struct node{
+    int idx,a,b,c;
+    bool operator==(const node& other) const {
+        return a == other.a &&b == other.b &&c == other.c;
+    }
+}t[maxn];
+int f[maxn],n,ans[maxk],k;
+struct BIT{
+    int n;
+    vector<int>t;
+    BIT(int n):n(n),t(n+1){};
+    int lowbit(int x) {return x&-x;}
+    void modify(int x,int d){
+        for(;x<=n;x+=lowbit(x)) t[x]+=d;
+    }
+    int query(int x){
+        int res=0;
+        for(;x;x-=lowbit(x)) res+=t[x];
+        return res;
+    }
+};
+BIT T(maxk);
+void prepare(){
+    sort(t+1,t+n+1,[](node a,node b){
+        if(a.a!=b.a) return a.a<b.a;
+        if(a.b!=b.b) return a.b<b.b;
+        return a.c<b.c;
+    });
+    for(int l=1,r=1;l<=n;l=++r){
+        while(r+1<=n&&t[l]==t[r+1]) r++;
+        for(int i=l;i<=r;i++){
+            f[t[i].idx]=r-i;
+        }
+    }
+}
+void merge(int l,int mid,int r){
+    int p,q;
+    for(p=l-1,q=mid+1;q<=r;q++){
+        while(p+1<=mid&&t[p+1].b<=t[q].b){
+            p++;
+            T.modify(t[p].c,1);
+        }
+        f[t[q].idx]+=T.query(t[q].c);
+    }
+    for(int i=l;i<=p;i++){
+        T.modify(t[i].c,-1);
+    }
+    sort(t+l,t+r+1,[](node a,node b){
+        return a.b<b.b;
+    });
+}
+void cdq(int l,int r){
+    if(l==r) return;
+    int mid=(l+r)>>1;
+    cdq(l,mid);
+    cdq(mid+1,r);
+    merge(l,mid,r);
+}
+
+int main(){
+    cin>>n>>k;
+    for(int i=1;i<=n;i++){
+        cin>>t[i].a>>t[i].b>>t[i].c;
+        t[i].idx=i;
+    }
+    prepare();
+    cdq(1,n);
+    for(int i=1;i<=n;i++){
+        ans[f[i]]++;
+    }
+    for(int i=0;i<n;i++) cout<<ans[i]<<endl;
+}
+\end{lstlisting}
 
 \algo{矩阵加速}
 \begin{lstlisting}

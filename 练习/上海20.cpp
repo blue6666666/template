@@ -423,116 +423,166 @@
 // }
 #include<bits/stdc++.h>
 using namespace std;
-int t;
-struct twtree{
+
+struct twtree {
     int dep;
     int mxdep;
-    int lc,rc;
-}a[30010];
-int st[30001][20];
-vector<int>d;
-void dfs(int u,int f){
-    a[u].dep=a[f].dep+1;
-    st[u][0]=f;
-    a[u].mxdep=a[u].dep;
-    for(int p=1;p<20;p++){
-        st[u][p]=st[st[u][p-1]][p-1];
+    int lc, rc;
+} a[30010];
+
+int st[30010][20];
+int tin[30010], tout[30010], timer;
+int cnt_sub[30010];
+vector<int> d;
+
+void dfs(int u, int f) {
+    tin[u] = ++timer;
+    a[u].dep = a[f].dep + 1;
+    st[u][0] = f;
+    a[u].mxdep = a[u].dep;
+
+    for (int p = 1; p < 20; p++) {
+        st[u][p] = st[st[u][p - 1]][p - 1];
     }
-    if(a[u].lc) dfs(a[u].lc,u);
-    if(a[u].rc) dfs(a[u].rc,u);
-    a[u].mxdep=max(max(a[a[u].lc].mxdep,a[a[u].rc].mxdep),a[u].mxdep);
+
+    if (a[u].lc) dfs(a[u].lc, u);
+    if (a[u].rc) dfs(a[u].rc, u);
+
+    a[u].mxdep = max(a[u].mxdep,
+                     max(a[a[u].lc].mxdep, a[a[u].rc].mxdep));
+    tout[u] = timer;
 }
-int findlca(int x,int y){
-    if(a[x].dep<a[y].dep) swap(x,y);
-    for(int p=19;p>=0;p--){
-        if(a[st[x][p]].dep>=a[y].dep) x=st[x][p];
-    }
-    if(x==y) return x;
-    for(int p=19;p>=0;p--){
-        if(st[x][p]!=st[y][p]){
-            x=st[x][p],y=st[y][p];
+
+int findlca(int x, int y) {
+    if (a[x].dep < a[y].dep) swap(x, y);
+
+    for (int p = 19; p >= 0; p--) {
+        if (a[st[x][p]].dep >= a[y].dep) {
+            x = st[x][p];
         }
     }
+
+    if (x == y) return x;
+
+    for (int p = 19; p >= 0; p--) {
+        if (st[x][p] != st[y][p]) {
+            x = st[x][p];
+            y = st[y][p];
+        }
+    }
+
     return st[x][0];
 }
-void dfs2(int u,int dep){
-    int lc=a[u].lc,rc=a[u].rc;
-    if(a[u].dep==dep-1){   
-        if(!lc) return;
-        d.push_back(lc);
-        if(!rc) d.push_back(lc);
-        else d.push_back(rc);
-        return;
-    }
-    
-    if(lc) dfs2(lc,dep);
-    if(rc) dfs2(rc,dep);
+
+bool isAnc(int anc, int u) {
+    return tin[anc] <= tin[u] && tout[u] <= tout[anc];
 }
-void solve(){
-    d.clear();
-    d.resize(0);
-    int n;
-    cin>>n;
-    for(int i=2;i<=n;i++){
-        int x;
-        cin>>x;
-        if(!a[x].lc)a[x].lc=i;
-        else a[x].rc=i;
-    }
-    dfs(1,0);
-    int xx=1;
-    int f;
-    int l=0,r=a[1].mxdep;
-    int mid;
-    while(l<r){
-        mid=(l+r)>>1;
-        cout<<"? "<<1<<' '<<mid<<endl;
-        cout.flush();
-        cin>>f;
-        if(f){
-            r=mid;
-        }else l=mid+1;
-    }
-    cout<<l<<endl;
-    if(l==0){
-        cout<<"! "<<1<<endl;
-        cout.flush();
+
+void collect(int u, int target_dist, vector<int>& vec) {
+    if (a[u].dep - 1 > target_dist) return;
+    if (a[u].mxdep - 1 < target_dist) return;
+    if (a[u].dep - 1 == target_dist) {
+        vec.push_back(u);
         return;
     }
-    if(l==1){
-        if(!a[1].rc) {cout<<"! "<<a[1].lc<<endl;cout.flush();return;}
-        cout<<"? "<<a[1].lc<<' '<<1<<endl;
+    if (a[u].lc) collect(a[u].lc, target_dist, vec);
+    if (a[u].rc) collect(a[u].rc, target_dist, vec);
+}
+void solve() {
+    memset(a, 0, sizeof(a));
+    memset(st, 0, sizeof(st));
+    memset(tin, 0, sizeof(tin));
+    memset(tout, 0, sizeof(tout));
+    timer = 0;
+    int n;
+    cin >> n;
+    for (int i = 2; i <= n; i++) {
+        int x;
+        cin >> x;
+        if (!a[x].lc) a[x].lc = i;
+        else a[x].rc = i;
+    }
+    dfs(1, 0);
+    int maxdist = a[1].mxdep - 1;
+    int l = 0, r = maxdist;
+
+    while (l < r) {
+        int mid = (l + r) >> 1;
+        cout << "? 1 " << mid << '\n';
         cout.flush();
-        cin>>f;
-        if(f){cout<<"! "<<a[1].lc<<endl;cout.flush();return;}
-        else {cout<<"! "<<a[1].rc<<endl;cout.flush();return;}
+
+        int resp;
+        cin >> resp;
+
+        if (resp) r = mid;
+        else l = mid + 1;
     }
-    dfs2(1,l+1);
-    l=0,r=d.size()-1;
-    while(l<r){
-        mid= (l+r)>>1;
-        int lca=findlca(d[l],d[mid]);
-        if(lca==1){
-            lca=findlca(d[mid],d[r]);
-            cout<<"? "<<lca<<' '<<a[d[mid]].dep-a[lca].dep<<endl;
-            cout.flush();
-            cin>>f;
-            if(f)l=mid;
-            else r=mid-1;
-            continue;
+
+    int D = l; 
+    vector<int> S;
+    collect(1, D, S);
+    while ((int)S.size() > 1) {
+        int m = (int)S.size();
+
+        memset(cnt_sub, 0, sizeof(cnt_sub));
+        for (int u : S) cnt_sub[u] = 1;
+        for (int u = n; u >= 1; u--) {
+            if (a[u].lc) cnt_sub[u] += cnt_sub[a[u].lc];
+            if (a[u].rc) cnt_sub[u] += cnt_sub[a[u].rc];
         }
-            cout<<"? "<<lca<<' '<<a[d[mid]].dep-a[lca].dep<<endl;
+
+        int cur = 1;
+        while (true) {
+            int left = a[cur].lc;
+            int right = a[cur].rc;
+
+            int cntL = left ? cnt_sub[left] : 0;
+            int cntR = right ? cnt_sub[right] : 0;
+
+            if (left && cntL > 9 * m / 10) {
+                cur = left;
+                continue;
+            }
+
+            if (right && cntR > 9 * m / 10) {
+                cur = right;
+                continue;
+            }
+
+            int q = (cntL >= cntR ? left : right);
+            int radius = D - (a[q].dep - 1);
+
+            cout << "? " << q << " " << radius << '\n';
             cout.flush();
-            cin>>f;
-            if(f)r=mid;
-            else l=mid+1;
+            int resp;
+            cin >> resp;
+            vector<int> nS;
+            if (resp) {
+                for (int u : S) {
+                    if (isAnc(q, u)) nS.push_back(u);
+                }
+            } else {
+                for (int u : S) {
+                    if (!isAnc(q, u)) nS.push_back(u);
+                }
+            }
+
+            S.swap(nS);
+            break;
+        }
     }
-    cout<<"! "<<d[l]<<endl;
+
+    cout << "! " << S[0] << '\n';
     cout.flush();
 }
-int main(){
-    cin>>t;
-    while(t--){
+
+int main() {
+    int t;
+    cin >> t;
+
+    while (t--) {
         solve();
     }
+
+    return 0;
 }
