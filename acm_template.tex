@@ -428,6 +428,86 @@ struct PairingMultiset {
 } p;
 \end{lstlisting}
 
+\algo{分块}
+\begin{lstlisting}
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=5e5+10;
+const int maxb=1e3+10;
+int arr[maxn],sv[maxn],n,m;
+int blen,bnum;
+int bi[maxn],bl[maxb],br[maxb];
+void build(){
+    blen=sqrt(n);
+    bnum=(n+blen-1)/blen;
+    for(int i=1;i<=n;i++){
+        bi[i]=(i-1)/blen+1;
+    }
+    for(int i=1;i<=bnum;i++){
+        bl[i]=(i-1)*blen+1;
+        br[i]=min(i*blen,n);
+    }
+    for(int i=1;i<=n;i++) sv[i]=arr[i];
+    for(int i=1;i<=bnum;i++){
+        sort(sv+bl[i],sv+br[i]+1);
+    }
+}
+int getcnt(int i,int v){
+    int l=bl[i],r=br[i],m,res=0;
+    while(l<=r){
+        m=(l+r)>>1;
+        if(sv[m]>=v){
+            res+=r-m+1;
+            r=m-1;
+        }else l=m+1;
+    }
+    return res;
+
+}
+void update(int ii,int v){
+    int l=bl[bi[ii]];
+    int r=br[bi[ii]];
+    arr[ii]=v;
+    for(int i=l;i<=r;i++) sv[i]=arr[i];
+    sort(sv+l,sv+r+1);
+}
+int query(int l,int r,int v){
+    int res=0;
+    if(bi[l]==bi[r]){
+        for(int i=l;i<=r;i++){
+            if(arr[i]>=v) res++;
+        }
+    }else{
+        for(int i=l;i<=br[bi[l]];i++){
+            if(arr[i]>=v) res++;
+        }
+        for(int i=bl[bi[r]];i<=r;i++){
+            if(arr[i]>=v) res++;
+        }
+        for(int i=bi[l];i<bi[r];i++){
+            res+=getcnt(i,v);
+        }
+    }
+    return res;
+}
+int main(){
+    cin>>n;
+    for(int i=1;i<=n;i++){
+        cin>>arr[i];
+    }
+    build();
+    cin>>m;
+    for(int i=1;i<=m;i++){
+        int op,a,b,c;
+        cin>>op>>a>>b;
+        if(op==0){
+            cin>>c;
+            cout<<query(a,b,c)<<endl;
+        }else update(a,b);
+    }
+}
+\end{lstlisting}
+
 \algo{带权并查集}
 \begin{lstlisting}
 struct DSU {
@@ -3025,12 +3105,46 @@ for (int y = x; y > 1; y /= mP[y]) {
 
 \algo{因数}
 \begin{lstlisting}
-const int X=1e5;
-vector<int> fac[X+5];
-for (int i = 1; i <= X; ++i) {
-    for (int j = i; j <= X; j += i) {
-        fac[j].push_back(i);
+// const int X=1e5;
+// vector<int> fac[X+5];
+// for (int i = 1; i <= X; ++i) {
+//     for (int j = i; j <= X; j += i) {
+//         fac[j].push_back(i);
+//     }
+// }
+vector<int> getFactors(int x){
+    vector<pair<int,int>> fac;
+
+    for(int p=2;p*p<=x;p++){
+        if(x%p!=0) continue;
+
+        int cnt=0;
+        while(x%p==0){
+            x/=p;
+            cnt++;
+        }
+
+        fac.push_back({p,cnt});
     }
+
+    if(x>1)
+        fac.push_back({x,1});
+
+    vector<int> factors={1};
+
+    for(auto [p,cnt]:fac){
+        int sz=factors.size();
+        int mul=1;
+
+        for(int i=1;i<=cnt;i++){
+            mul*=p;
+
+            for(int j=0;j<sz;j++)
+                factors.push_back(factors[j]*mul);
+        }
+    }
+
+    return factors;
 }
 \end{lstlisting}
 
@@ -3096,6 +3210,12 @@ while (l <= n) {
 
 \algo{高斯消元}
 \begin{lstlisting}
+const double eps = 1e-9;
+int sgn(double x) {
+    if (fabs(x) < eps) return 0;
+    return x < 0 ? -1 : 1;
+}
+
 int Guess(vector<vector<db>> &a)
 {
 	int n = a.size();
