@@ -281,6 +281,12 @@ il int read()
 }
 \end{lstlisting}
 
+\algo{数组离散化}
+\begin{lstlisting}
+sort(vals.begin(), vals.end());
+    vals.erase(unique(vals.begin(), vals.end()), vals.end());
+\end{lstlisting}
+
 \algo{随机数生成器}
 \begin{lstlisting}
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
@@ -751,6 +757,431 @@ struct Info {
     Info(int mx = 0): mx(mx) { }
     friend Info operator+ (Info u, Info v) {
         return Info( max(u.mx, v.mx) );
+    }
+};
+\end{lstlisting}
+
+\algo{替罪羊树}
+\begin{lstlisting}
+/*替罪羊树 是一种依靠重构操作维持平衡的重量平衡树．替罪羊树会在插入、删除操作后，检测树是否发生失衡；如果失衡，将有针对性地进行重构以恢复平衡．
+一般地，替罪羊树不支持区间操作，且无法完全持久化；但它具有实现简单、常数较小的优点．
+*/
+//单次查询，单次调整的代价均摊为log（n），平衡因子一般为0.7--0.8
+//做词频压缩的
+struct ScapegoatTree {
+    static const int MAXN = 200005;
+    static constexpr double ALPHA = 0.7;
+    static const int INF = 1e9 + 10;
+
+    int root, cnt;
+    int key[MAXN], num[MAXN];
+    int l[MAXN], r[MAXN];
+    int sz[MAXN], dif[MAXN];
+    int v[MAXN];
+
+    int vc;
+    int top, fa, side;
+
+    ScapegoatTree() {
+        clear();
+    }
+
+    int init(int x) {
+        ++cnt;
+        key[cnt] = x;
+        num[cnt] = 1;
+        l[cnt] = r[cnt] = 0;
+        sz[cnt] = dif[cnt] = 1;
+        return cnt;
+    }
+
+    void pushup(int p) {
+        sz[p] = sz[l[p]] + sz[r[p]] + num[p];
+        dif[p] = dif[l[p]] + dif[r[p]] + (num[p] > 0);
+    }
+
+    bool balance(int p) {
+        return ALPHA * dif[p] >= max(dif[l[p]], dif[r[p]]);
+    }
+
+    void inorder(int p) {
+        if (!p) return;
+
+        inorder(l[p]);
+
+        if (num[p] > 0)
+            v[++vc] = p;
+
+        inorder(r[p]);
+    }
+
+    int build(int L, int R) {
+        if (L > R) return 0;
+
+        int mid = (L + R) >> 1;
+        int p = v[mid];
+
+        l[p] = build(L, mid - 1);
+        r[p] = build(mid + 1, R);
+
+        pushup(p);
+
+        return p;
+    }
+
+    void rebuild() {
+        if (!top) return;
+
+        vc = 0;
+        inorder(top);
+
+        if (!vc) {
+            if (!fa) root = 0;
+            else if (side == 1) l[fa] = 0;
+            else r[fa] = 0;
+            return;
+        }
+
+        int p = build(1, vc);
+
+        if (!fa)
+            root = p;
+        else if (side == 1)
+            l[fa] = p;
+        else
+            r[fa] = p;
+    }
+
+    void insert(int p, int f, int s, int x) {
+        if (!p) {
+            if (!f)
+                root = init(x);
+            else if (s == 1)
+                l[f] = init(x);
+            else
+                r[f] = init(x);
+
+            return;
+        }
+
+        if (key[p] == x)
+            ++num[p];
+        else if (key[p] > x)
+            insert(l[p], p, 1, x);
+        else
+            insert(r[p], p, 2, x);
+
+        pushup(p);
+
+        if (!balance(p)) {
+            top = p;
+            fa = f;
+            side = s;
+        }
+    }
+
+    void insert(int x) {
+        top = fa = side = 0;
+        insert(root, 0, 0, x);
+        rebuild();
+    }
+
+    int countLess(int p, int x) {
+        if (!p) return 0;
+
+        if (key[p] >= x)
+            return countLess(l[p], x);
+
+        return sz[l[p]] + num[p] + countLess(r[p], x);
+    }
+
+    // x 的排名：第一个 >= x 的位置
+    int rank(int x) {
+        return countLess(root, x) + 1;
+    }
+
+    int kth(int p, int k) {
+        if (sz[l[p]] >= k)
+            return kth(l[p], k);
+
+        if (sz[l[p]] + num[p] < k)
+            return kth(r[p], k - sz[l[p]] - num[p]);
+
+        return key[p];
+    }
+
+    // 第 k 小
+    int kth(int k) {
+        if (k <= 0 || k > sz[root])
+            return INF;
+
+        return kth(root, k);
+    }
+
+    bool exist(int p, int x) {
+        if (!p) return false;
+
+        if (key[p] == x)
+            return num[p] > 0;
+
+        if (key[p] > x)
+            return exist(l[p], x);
+
+        return exist(r[p], x);
+    }
+
+    void erase(int p, int f, int s, int x) {
+        if (!p) return;
+
+        if (key[p] == x)
+            --num[p];
+        else if (key[p] > x)
+            erase(l[p], p, 1, x);
+        else
+            erase(r[p], p, 2, x);
+
+        pushup(p);
+
+        if (!balance(p)) {
+            top = p;
+            fa = f;
+            side = s;
+        }
+    }
+
+    void erase(int x) {
+        if (!exist(root, x)) return;
+
+        top = fa = side = 0;
+        erase(root, 0, 0, x);
+        rebuild();
+    }
+
+    // < x 的最大值
+    int pre(int x) {
+        int k = rank(x);
+
+        if (k == 1)
+            return -INF;
+
+        return kth(k - 1);
+    }
+
+    // > x 的最小值
+    int nxt(int x) {
+        int k = rank(x + 1);
+
+        if (k == sz[root] + 1)
+            return INF;
+
+        return kth(k);
+    }
+
+    // 当前元素总数
+    int size() {
+        return sz[root];
+    }
+
+    // 是否为空
+    bool empty() {
+        return sz[root] == 0;
+    }
+
+    // 清空
+    void clear() {
+        root = 0;
+        cnt = 0;
+        vc = 0;
+        top = fa = side = 0;
+    }
+};
+
+//不做词频压缩版本
+struct ScapegoatTree {
+    static const int MAXN = 200005;
+    static constexpr double ALPHA = 0.7;
+    int root, cnt;
+    int key[MAXN], l[MAXN], r[MAXN], sz[MAXN];
+    int v[MAXN];
+    int vc;
+    int top, fa, side;
+    ScapegoatTree() {
+        clear();
+    }
+    int init(int x) {
+        ++cnt;
+        key[cnt] = x;
+        l[cnt] = r[cnt] = 0;
+        sz[cnt] = 1;
+        return cnt;
+    }
+    void pushup(int p) {
+        sz[p] = sz[l[p]] + sz[r[p]] + 1;
+    }
+    bool balance(int p) {
+        return max(sz[l[p]], sz[r[p]]) <= ALPHA * sz[p];
+    }
+    void inorder(int p) {
+        if (!p) return;
+        inorder(l[p]);
+        v[++vc] = p;
+        inorder(r[p]);
+    }
+    int build(int L, int R) {
+        if (L > R) return 0;
+        int mid = (L + R) >> 1;
+        int p = v[mid];
+        l[p] = build(L, mid - 1);
+        r[p] = build(mid + 1, R);
+        pushup(p);
+        return p;
+    }
+    void rebuild() {
+        if (!top) return;
+        vc = 0;
+        inorder(top);
+        int p = build(1, vc);
+        if (!fa)
+            root = p;
+        else if (side == 1)
+            l[fa] = p;
+        else
+            r[fa] = p;
+    }
+    void insert(int p, int f, int s, int x) {
+        if (!p) {
+            if (!f)
+                root = init(x);
+            else if (s == 1)
+                l[f] = init(x);
+            else
+                r[f] = init(x);
+
+            return;
+        }
+        if (x <= key[p])
+            insert(l[p], p, 1, x);
+        else
+            insert(r[p], p, 2, x);
+        pushup(p);
+        if (!balance(p)) {
+            top = p;
+            fa = f;
+            side = s;
+        }
+    }
+    void insert(int x) {
+        top = fa = side = 0;
+        insert(root, 0, 0, x);
+        rebuild();
+    }
+    // < x 的元素个数
+    int countLess(int p, int x) {
+        if (!p) return 0;
+        if (key[p] >= x)
+            return countLess(l[p], x);
+        return sz[l[p]] + 1 + countLess(r[p], x);
+    }
+    // x 的排名：第一个 >= x 的位置
+    int rank(int x) {
+        return countLess(root, x) + 1;
+    }
+    int kth(int p, int k) {
+        if (sz[l[p]] >= k)
+            return kth(l[p], k);
+
+        if (sz[l[p]] + 1 < k)
+            return kth(r[p], k - sz[l[p]] - 1);
+
+        return key[p];
+    }
+    // 第 k 小
+    int kth(int k) {
+        return kth(root, k);
+    }
+    bool exist(int p, int x) {
+        if (!p) return false;
+        if (key[p] == x)
+            return true;
+        if (x < key[p])
+            return exist(l[p], x);
+        return exist(r[p], x);
+    }
+    void erase(int p, int f, int s, int x) {
+        if (key[p] == x) {
+            // 找到以后直接把整个节点删除
+            // 用左右子树合并的方法删除
+            if (!l[p] || !r[p]) {
+                int son = l[p] ? l[p] : r[p];
+
+                if (!f)
+                    root = son;
+                else if (s == 1)
+                    l[f] = son;
+                else
+                    r[f] = son;
+
+                return;
+            }
+            // 两个儿子都存在：
+            // 找右子树最小节点
+            int q = r[p];
+            while (l[q])
+                q = l[q];
+
+            key[p] = key[q];
+
+            erase(r[p], p, 2, key[q]);
+        }
+        else if (x < key[p]) {
+            erase(l[p], p, 1, x);
+        }
+        else {
+            erase(r[p], p, 2, x);
+        }
+        pushup(p);
+        if (!balance(p)) {
+            top = p;
+            fa = f;
+            side = s;
+        }
+    }
+    void erase(int x) {
+        if (!exist(root, x)) return;
+
+        top = fa = side = 0;
+        erase(root, 0, 0, x);
+        rebuild();
+    }
+    // < x 的最大值
+    int pre(int x) {
+        int k = rank(x);
+
+        if (k == 1)
+            return -INT_MAX;
+
+        return kth(k - 1);
+    }
+    // > x 的最小值
+    int nxt(int x) {
+        int k = rank(x + 1);
+
+        if (k == sz[root] + 1)
+            return INT_MAX;
+
+        return kth(k);
+    }
+    int size() {
+        return sz[root];
+    }
+    bool empty() {
+        return sz[root] == 0;
+    }
+    void clear() {
+        root = 0;
+        cnt = 0;
+        vc = 0;
+        top = fa = side = 0;
     }
 };
 \end{lstlisting}
@@ -1812,6 +2243,58 @@ for (int j = 1; j <= n; ++j) {  // 注意中转点在最外层
     for (int i = 1; i <= n; ++i) {
         if (b[i][j]) { b[i] |= b[j]; }
     }
+}
+\end{lstlisting}
+
+\algo{判奇环（无向图）}
+\begin{lstlisting}
+#include <iostream>
+#include <vector>
+using namespace std;
+bool dfs(int u, int c, vector<vector<int>>& adj, vector<int>& color) {
+    color[u] = c;
+    for (int v : adj[u]) {
+        if (color[v] == -1) {               // 未染色，染相反色并递归
+            if (!dfs(v, 1 - c, adj, color))
+                return false;
+        } else if (color[v] == c) {         // 邻接点同色，出现奇环
+            return false;
+        }
+    }
+    return true;
+}
+
+bool hasOddCycle(int n, vector<vector<int>>& adj) {
+    vector<int> color(n, -1);
+    for (int i = 0; i < n; ++i) {
+        if (color[i] == -1) {
+            if (!dfs(i, 0, adj, color))
+                return true;   
+        }
+    }
+    return false;
+}
+
+int main() {
+    int n, m;
+    cout << "请输入顶点数和边数：";
+    cin >> n >> m;
+
+    vector<vector<int>> adj(n);
+    cout << "请输入每条边的两个端点（编号从0开始）：" << endl;
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);  
+    }
+
+    if (hasOddCycle(n, adj))
+        cout << "图中存在奇环" << endl;
+    else
+        cout << "图中不存在奇环（是二分图）" << endl;
+
+    return 0;
 }
 \end{lstlisting}
 
@@ -3148,6 +3631,70 @@ vector<int> getFactors(int x){
 }
 \end{lstlisting}
 
+\algo{拉格朗日插值}
+\begin{lstlisting}
+#include <iostream>
+#include <vector>
+constexpr int MOD = 998244353;
+using LL = long long;
+
+int inv(int k) {
+  int res = 1;
+  for (int e = MOD - 2; e; e /= 2) {
+    if (e & 1) res = (LL)res * k % MOD;
+    k = (LL)k * k % MOD;
+  }
+  return res;
+}
+
+// 返回 f 满足 f(x_i) = y_i
+// 不考虑乘法逆元的时间，显然为 O(n^2)
+std::vector<int> lagrange_interpolation(const std::vector<int> &x,
+                                        const std::vector<int> &y) {
+  const int n = x.size();
+  std::vector<int> M(n + 1), px(n, 1), f(n);
+  M[0] = 1;
+  // 求出 M(x) = prod_(i=0..n-1)(x - x_i)
+  for (int i = 0; i < n; ++i) {
+    for (int j = i; j >= 0; --j) {
+      M[j + 1] = (M[j] + M[j + 1]) % MOD;
+      M[j] = (LL)M[j] * (MOD - x[i]) % MOD;
+    }
+  }
+  // 求出 px_i = prod_(j=0..n-1, j!=i) (x_i - x_j)
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j)
+      if (i != j) {
+        px[i] = (LL)px[i] * (x[i] - x[j] + MOD) % MOD;
+      }
+  }
+  // 组合出 f(x) = sum_(i=0..n-1)(y_i / px_i)(M(x) / (x - x_i))
+  for (int i = 0; i < n; ++i) {
+    LL t = (LL)y[i] * inv(px[i]) % MOD, k = M[n];
+    for (int j = n - 1; j >= 0; --j) {
+      f[j] = (f[j] + k * t) % MOD;
+      k = (M[j] + k * x[i]) % MOD;
+    }
+  }
+  return f;
+}
+
+int main() {
+  std::ios::sync_with_stdio(false);
+  std::cin.tie(nullptr);
+  int n, k;
+  std::cin >> n >> k;
+  //求f（k）
+  std::vector<int> x(n), y(n);
+  for (int i = 0; i < n; ++i) std::cin >> x[i] >> y[i];
+  const auto f = lagrange_interpolation(x, y);
+  int v = 0;
+  for (int i = n - 1; i >= 0; --i) v = ((LL)v * k + f[i]) % MOD;
+  std::cout << v << '\n';
+  return 0;
+}
+\end{lstlisting}
+
 \algo{快速幂与乘法逆元}
 \begin{lstlisting}
 const int MOD=998244353;
@@ -3210,12 +3757,6 @@ while (l <= n) {
 
 \algo{高斯消元}
 \begin{lstlisting}
-const double eps = 1e-9;
-int sgn(double x) {
-    if (fabs(x) < eps) return 0;
-    return x < 0 ? -1 : 1;
-}
-
 int Guess(vector<vector<db>> &a)
 {
 	int n = a.size();
@@ -5668,6 +6209,25 @@ vector<long double> area_union(const vector<Circle> &circs)
 
 \section{其它}
 
+\algo{二维差分与前缀和}
+\begin{lstlisting}
+void cf(int x1,int y1,int x2,int y2){
+    a[x1][y1]++;
+    a[x2+1][y2+1]++;
+    a[x2+1][y1]--;
+    a[x1][y2+1]--;
+}
+
+只对四边形四条边差分
+cf(i,j,i+l,j);                 
+cf(i,j+1,i,j+l);               
+cf(i+l,j+1,i+l,j+l);          
+cf(i+1,j+l,i+l-1,j+l);   
+
+前缀和
+a[i][j] += a[i-1][j] + a[i][j-1] - a[i-1][j-1];
+\end{lstlisting}
+
 \algo{CDQ分治}
 \begin{lstlisting}
 //3810
@@ -5866,6 +6426,155 @@ int main(){
 		printf("%lld\n",ans.qwq[1][1]);
 	}
 	return 0;
+}
+\end{lstlisting}
+
+\algo{cdq斜率优化}
+\begin{lstlisting}
+#include<bits/stdc++.h>
+using namespace std;
+
+using ll=long long;
+using i128=__int128_t;
+
+const int maxn=5e4+10;
+const i128 inf=((i128)1<<120);
+
+int n;
+ll L;
+ll c[maxn],s[maxn];
+i128 f[maxn];
+
+struct node{
+    ll k;
+    i128 b;
+};
+
+vector<node> a,hull;
+
+bool cmp(node x,node y){
+    if(x.k!=y.k)
+        return x.k<y.k;
+    return x.b<y.b;
+}
+
+i128 get(node x,ll p){
+    return (i128)x.k*p+x.b;
+}
+
+bool check(node a,node b,node c){
+    return (a.b-b.b)*(c.k-b.k)
+         >=(b.b-c.b)*(b.k-a.k);
+}
+
+void build(int l,int r){
+    a.clear();
+    hull.clear();
+
+    for(int i=l;i<=r;i++){
+        node x;
+        x.k=-2*s[i];
+        x.b=f[i]+(i128)s[i]*s[i];
+        a.push_back(x);
+    }
+
+    sort(a.begin(),a.end(),cmp);
+
+    for(auto x:a){
+        if(!hull.empty()&&hull.back().k==x.k)
+            continue;
+
+        while(hull.size()>=2&&
+              check(hull[hull.size()-2],hull.back(),x)){
+            hull.pop_back();
+        }
+
+        hull.push_back(x);
+    }
+}
+
+i128 query(ll x){
+    int l=0,r=(int)hull.size()-1;
+
+    while(l<r){
+        int mid=(l+r)>>1;
+
+        if(get(hull[mid],x)>=get(hull[mid+1],x))
+            l=mid+1;
+        else
+            r=mid;
+    }
+
+    return get(hull[l],x);
+}
+
+void CDQ(int l,int r){
+    if(l==r)
+        return;
+
+    int mid=(l+r)>>1;
+
+    CDQ(l,mid);
+
+    build(l,mid);
+
+    for(int i=mid+1;i<=r;i++){
+        ll x=s[i]-L;
+
+        i128 res=(i128)x*x+query(x);
+
+        f[i]=min(f[i],res);
+    }
+
+    CDQ(mid+1,r);
+}
+
+void print(i128 x){
+    if(x==0){
+        cout<<0;
+        return;
+    }
+
+    if(x<0){
+        cout<<'-';
+        x=-x;
+    }
+
+    string s;
+
+    while(x){
+        s.push_back('0'+x%10);
+        x/=10;
+    }
+
+    reverse(s.begin(),s.end());
+    cout<<s;
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cin>>n>>L;
+
+    s[0]=0;
+
+    for(int i=1;i<=n;i++){
+        cin>>c[i];
+        s[i]=s[i-1]+c[i]+1;
+    }
+
+    for(int i=0;i<=n;i++)
+        f[i]=inf;
+
+    f[0]=0;
+
+    CDQ(0,n);
+
+    print(f[n]);
+    cout<<'\n';
+
+    return 0;
 }
 \end{lstlisting}
 
