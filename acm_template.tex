@@ -21,7 +21,7 @@
 \titlespacing{\section}{0pt}{8pt}{4pt}\titlespacing{\subsection}{0pt}{6pt}{2pt}
 \newcommand{\algo}[1]{\subsection{#1}}
 \begin{document}
-\title{\Huge\bfseries\sffamily ACM/ICPC}\author{\large The Three Stooges}\date{\today}\maketitle
+\title{\Huge\bfseries\sffamily ACM/ICPC}\author{\large Rejected}\date{\today}\maketitle
 \tableofcontents\newpage
 
 \section{不要忘记}
@@ -2718,6 +2718,22 @@ void dfs(int u,int fa,int d){ if(d>maxd){maxd=d;far=u;} for(int v:g[u])if(v!=fa)
 // dfs(1,0,0); dfs(far,0,0); maxd即为直径
 \end{lstlisting}
 
+\algo{树的重心}
+\begin{lstlisting}
+void dfs(int u, int fa, int &centroid) {
+    sz[u] = 1;
+    bool ok = true;
+    for (int v : g[u]) {
+        if (v == fa) continue;
+        dfs(v, u, centroid);
+        sz[u] += sz[v];
+        if (sz[v] > n / 2) ok = false;
+    }
+    if (n - sz[u] > n / 2) ok = false;
+    if (ok) centroid = u;
+}
+\end{lstlisting}
+
 \algo{最大流}
 \begin{lstlisting}
 const ll INF = 9e18; 
@@ -4443,6 +4459,21 @@ if ((x & 1) == 0)
 x && y == x & y
 x || y == x | y
 !x == x ^ 1 == 1 - x
+\end{lstlisting}
+
+\algo{builtin}
+\begin{lstlisting}
+函数	功能	竞赛用途	典型代码
+__builtin_popcount(x)	统计 32 位整数中 1 的个数	状压 DP、枚举子集、判断 2 的幂	int c = __builtin_popcount(mask);
+__builtin_popcountll(x)	统计 64 位整数中 1 的个数	64 位掩码统计	int c = __builtin_popcountll(mask);
+__builtin_clz(x)	统计 32 位前导零个数	求 log2(x)	int lg = 31 - __builtin_clz(x);
+__builtin_clzll(x)	统计 64 位前导零个数	求 64 位 log2(x)	int lg = 63 - __builtin_clzll(x);
+__builtin_ctz(x)	统计 32 位末尾零个数	求 lowbit、遍历掩码中的 1	int i = __builtin_ctz(mask);
+__builtin_ctzll(x)	统计 64 位末尾零个数	64 位 lowbit	int i = __builtin_ctzll(mask);
+__builtin_ffs(x)	返回最低位 1 的位置，从 1 开始	找最低位 1 的下标	int pos = __builtin_ffs(mask);
+__builtin_ffsll(x)	64 位版 ffs	64 位找最低位 1	int pos = __builtin_ffsll(mask);
+__builtin_parity(x)	判断 1 的个数奇偶性	奇偶校验	int p = __builtin_parity(mask);
+__builtin_parityll(x)	64 位版 parity	64 位奇偶校验	int p = __builtin_parityll(mask);
 \end{lstlisting}
 
 \section{字符串}

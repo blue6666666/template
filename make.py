@@ -30,7 +30,7 @@ PREAMBLE = r'''\documentclass[a4paper,9pt,twocolumn]{extarticle}
 \titlespacing{\section}{0pt}{8pt}{4pt}\titlespacing{\subsection}{0pt}{6pt}{2pt}
 \newcommand{\algo}[1]{\subsection{#1}}
 \begin{document}
-\title{\Huge\bfseries\sffamily ACM/ICPC}\author{\large The Three Stooges}\date{\today}\maketitle
+\title{\Huge\bfseries\sffamily ACM/ICPC}\author{\large Rejected}\date{\today}\maketitle
 \tableofcontents\newpage
 '''
 
