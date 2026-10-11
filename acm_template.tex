@@ -173,6 +173,115 @@ ostream& operator<< (ostream& os, __int128 &x)
 }
 \end{lstlisting}
 
+\algo{多进程评测}
+\begin{lstlisting}
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+int main(int argc, char *argv[]) {
+    int id = argc > 1 ? atoi(argv[1]) : 0;
+    int v;
+    cin >> v;
+    cout << v << endl;
+    cout.flush();
+    return 0;
+}
+\end{lstlisting}
+
+\algo{迭代器辅助函数}
+\begin{lstlisting}
+函数	作用	是否修改原迭代器	set 上复杂度
+std::next(it)	返回 it 后一个位置的迭代器	否	O(1)
+std::next(it, n)	返回 it 后 n 步的迭代器	否	O(n)
+std::prev(it)	返回 it 前一个位置的迭代器	否	O(1)
+std::prev(it, n)	返回 it 前 n 步的迭代器	否	O(n)
+std::advance(it, n)	把 it 本身移动 n 步	是	O(n)
+std::distance(a, b)	计算 a 到 b 的步数	否	O(n)
+++it / --it	前进一步 / 后退一步	是	O(1)
+注意：
+std::next、std::prev 返回的是新迭代器，原来的 it 不变。
+
+std::advance 会直接改 it，没有返回值。
+
+对 set 来说，std::distance 是 O(n)，不要拿它当区间长度用。区间长度应该用 key 的差值，比如 *next(it) - *prev(it)。
+\end{lstlisting}
+
+\algo{set相关}
+\begin{lstlisting}
+// 默认：从小到大（std::less<int>）
+set<int> s1;
+// 从大到小（std::greater<int>）
+set<int, greater<int>> s2;
+// 自定义比较器（仿函数）
+struct GreaterCmp {
+    bool operator()(int a, int b) const {
+        return a > b;   // 从大到小
+    }
+};
+set<int, GreaterCmp> s3;
+// 用 lambda 自定义比较器（注意：lambda 类型没有默认构造函数）
+auto cmp = [](int a, int b) { return a > b; };
+set<int, decltype(cmp)> s4(cmp);
+// insert(value) 返回 pair<iterator, bool>
+//   - first: 指向插入元素或已存在元素
+//   - second: 是否插入成功
+// insert(hint, value) 返回 iterator
+// hint 正确时均摊 O(1)，否则 O(log n)
+s1.insert(s1.end(), 20);
+// 插入范围
+vector<int> v = {5, 6, 7};
+s1.insert(v.begin(), v.end());
+// emplace 原地构造
+s1.emplace(30);
+// ------------------------------------------------------------
+// 3. 删除
+// ------------------------------------------------------------
+// 按 key 删除，返回删除个数（set 中为 0 或 1）
+size_t cnt = s1.erase(10);
+auto it2 = s1.find(20);
+if (it2 != s1.end()) {
+    it2 = s1.erase(it2);   // it2 现在指向下一个元素
+}
+
+// 删除范围 [first, last)
+// s1.erase(s1.begin(), s1.end());
+// 清空
+// s1.clear();
+// ------------------------------------------------------------
+// 4. 查找
+// ------------------------------------------------------------
+// find(key) 找到返回迭代器，否则返回 end()
+auto it3 = s1.find(5);
+if (it3 != s1.end()) {
+    // 找到了
+}
+// count(key) set 中返回 0 或 1
+if (s1.count(5)) {
+    // 存在
+}
+
+// lower_bound(key) / upper_bound(key)
+// 默认 less 时：
+//   lower_bound: 第一个 >= key
+//   upper_bound: 第一个 > key
+// 使用 greater 时语义相反（降序）：
+//   lower_bound: 第一个 <= key
+//   upper_bound: 第一个 < key
+auto lb = s1.lower_bound(5);
+auto ub = s1.upper_bound(5);
+
+// equal_range 返回 pair(lower_bound, upper_bound)
+auto [lo, hi] = s1.equal_range(5);
+// ------------------------------------------------------------
+// 5. 迭代器与容量
+// ------------------------------------------------------------
+// s1.begin(), s1.end()
+// s1.cbegin(), s1.cend()
+// s1.rbegin(), s1.rend()
+// s1.size(), s1.empty()
+// ------------------------------------------------------------
+\end{lstlisting}
+
 \algo{vector相关}
 \begin{lstlisting}
 // 多维 vector，需要 c++17，c++14 只能老老实实写 vector<vector<int>>
@@ -1837,7 +1946,6 @@ int main(){
 //P1471 求方差
 #include<bits/stdc++.h>
 using namespace std;
-
 const int maxn=100001;
 double a[maxn],sum[maxn<<2],pf[maxn<<2],lazy[maxn<<2];
 void up(int i){
@@ -3722,6 +3830,47 @@ ll qpow(ll a, ll b=MOD-2)
         a = a*a%MOD;  // 不要少 MOD
     }
     return res;
+}
+void Exgcd(ll a, ll b, ll &x, ll &y) {
+    if (!b) x = 1, y = 0;
+    else Exgcd(b, a % b, y, x), y -= a / b * x;
+}
+int main() {
+    ll x, y;
+    Exgcd (a, p, x, y);
+    x = (x % p + p) % p;
+    printf ("%d\n", x); //x是a在mod p下的逆元
+}
+inv[1] = 1;
+for(int i = 2; i < p; ++ i)
+    inv[i] = (p - p / i) * inv[p % i] % p;
+\end{lstlisting}
+
+\algo{中国剩余定理}
+\begin{lstlisting}
+LL CRT(int k, LL* a, LL* r) {
+  LL n = 1, ans = 0;
+  for (int i = 1; i <= k; i++) n = n * r[i];
+  for (int i = 1; i <= k; i++) {
+    LL m = n / r[i], b, y;
+    exgcd(m, r[i], b, y);  // b * m mod r[i] = 1
+    ans = (ans + a[i] * m * b % n) % n;
+  }
+  return (ans % n + n) % n;
+}
+\end{lstlisting}
+
+\algo{扩展欧几里得}
+\begin{lstlisting}
+LL CRT(int k, LL* a, LL* r) {
+  LL n = 1, ans = 0;
+  for (int i = 1; i <= k; i++) n = n * r[i];
+  for (int i = 1; i <= k; i++) {
+    LL m = n / r[i], b, y;
+    exgcd(m, r[i], b, y);  // b * m mod r[i] = 1
+    ans = (ans + a[i] * m * b % n) % n;
+  }
+  return (ans % n + n) % n;
 }
 \end{lstlisting}
 
