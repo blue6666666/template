@@ -1,33 +1,90 @@
-\documentclass[a4paper,9pt,twocolumn]{extarticle}
+\documentclass[a4paper,9pt]{extarticle}
 \usepackage[UTF8]{ctex}
-\usepackage[top=1cm,bottom=1cm,left=1cm,right=1cm,columnsep=0.6cm]{geometry}
-\usepackage{fancyhdr,titlesec,xcolor,amsmath,amssymb,listings}
-\usepackage[colorlinks=true,linkcolor=black,urlcolor=black,citecolor=black]{hyperref}
-\setmainfont{Times New Roman}\setsansfont{Arial}\setmonofont{Consolas}[Scale=0.9]
-\definecolor{codebg}{gray}{0.95}\definecolor{commentgreen}{gray}{0.45}
-\lstset{language=C++,basicstyle=\fontsize{7.5}{9}\selectfont\ttfamily\color{black},
-  keywordstyle=\bfseries\color{black},commentstyle=\itshape\color{commentgreen},
-  stringstyle=\color{black},numbers=left,numberstyle=\tiny\color{gray},
-  stepnumber=1,numbersep=4pt,backgroundcolor=\color{codebg},
+\usepackage[top=16mm,bottom=14mm,left=12mm,right=12mm,columnsep=7mm]{geometry}
+\usepackage{fancyhdr,titlesec,xcolor,amsmath,amssymb,listings,graphicx}
+\usepackage{needspace,tabularx,array,booktabs}
+\usepackage[colorlinks=true,linkcolor=accent,urlcolor=accent,bookmarksnumbered=true]{hyperref}
+\definecolor{accent}{HTML}{24485D}
+\definecolor{codebg}{HTML}{F5F7F8}
+\definecolor{muted}{HTML}{61717B}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{}
+\IfFontExistsTF{Arial}{\setsansfont{Arial}}{}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}[Scale=0.9]}{\setmonofont{Latin Modern Mono}}
+\lstset{language=C++,basicstyle=\fontsize{7.6}{9.2}\selectfont\ttfamily,
+  keywordstyle=\bfseries\color{accent},commentstyle=\color{muted},
+  stringstyle=\color{black!80},numbers=left,numberstyle=\fontsize{5.5}{7}\selectfont\color{muted},
+  numbersep=5pt,backgroundcolor=\color{codebg},
   showspaces=false,showstringspaces=false,showtabs=false,tabsize=2,
-  breaklines=true,breakatwhitespace=false,frame=single,framerule=0.3pt,
-  rulecolor=\color{black!30},framesep=4pt,aboveskip=4pt,belowskip=4pt,
-  lineskip=0.5pt,xleftmargin=4pt,xrightmargin=4pt}
-\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\sffamily\color{gray}\leftmark}
-\fancyhead[R]{\small\sffamily\color{gray}\rightmark}\fancyfoot[C]{\small\sffamily\thepage}
-\renewcommand{\headrulewidth}{0.3pt}\setlength{\headheight}{14pt}
-\titleformat{\section}{\Large\bfseries\sffamily}{\thesection}{0.8em}{}[{\vspace{-0.3em}\titlerule[0.3pt]}]
-\titleformat{\subsection}{\normalsize\bfseries\sffamily}{\thesubsection}{0.6em}{}
-\titlespacing{\section}{0pt}{8pt}{4pt}\titlespacing{\subsection}{0pt}{6pt}{2pt}
-\newcommand{\algo}[1]{\subsection{#1}}
+  columns=flexible,keepspaces=true,breaklines=true,breakatwhitespace=false,
+  breakindent=1em,
+  frame=l,framerule=0.4pt,rulecolor=\color{accent!35},framesep=3pt,
+  aboveskip=5pt,belowskip=5pt,xleftmargin=10pt,xrightmargin=3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\fontsize{8}{10}\selectfont\sffamily\color{muted}ACM / ICPC}
+\fancyhead[R]{\fontsize{8}{10}\selectfont\sffamily\color{muted}\leftmark}
+\fancyfoot[C]{\fontsize{8}{10}\selectfont\sffamily\thepage}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+\renewcommand{\headrulewidth}{0.3pt}\setlength{\headheight}{13pt}
+\titleformat{\section}{\large\bfseries\sffamily\color{accent}}{\thesection}{0.6em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\sffamily\color{accent}}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\small\bfseries}{\thesubsubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+\titlespacing*{\subsection}{0pt}{8pt}{3pt}
+\titlespacing*{\subsubsection}{0pt}{5pt}{2pt}
+\setcounter{tocdepth}{2}\setcounter{secnumdepth}{2}
+\setlength{\parindent}{0pt}\setlength{\parskip}{2.5pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\newsavebox{\mathbox}
+\newcommand{\fitmath}[1]{\par\smallskip\begingroup
+  \sbox{\mathbox}{$\displaystyle #1$}
+  \noindent\makebox[\linewidth][c]{\ifdim\wd\mathbox>\linewidth
+    \resizebox{\linewidth}{!}{\usebox{\mathbox}}\else\usebox{\mathbox}\fi}
+  \par\endgroup\smallskip}
+\hypersetup{pdftitle={ACM/ICPC 算法模板},pdfauthor={Rejected}}
 \begin{document}
-\title{\Huge\bfseries\sffamily ACM/ICPC}\author{\large Rejected}\date{\today}\maketitle
-\tableofcontents\newpage
 
+\thispagestyle{empty}
+\setlength{\unitlength}{1mm}
+\noindent\begin{picture}(186,255)
+\put(0,204){\includegraphics[width=56mm]{\detokenize{E:/项目/模板/assets/icpc-foundation.pdf}}}
+\put(0,177){\makebox(0,0)[l]{\fontsize{47}{52}\selectfont\sffamily\bfseries\color{accent}ICPC / ACM}}
+\put(0,157){\makebox(0,0)[l]{\fontsize{25}{30}\selectfont\sffamily\bfseries\color{accent}算法模板手册}}
+\put(0,142){\makebox(0,0)[l]{\fontsize{10}{14}\selectfont\sffamily\color{muted}COMPETITIVE PROGRAMMING NOTEBOOK}}
+\put(0,132){\color{accent}\rule{186mm}{0.5pt}}
+{\color{accent!18}\linethickness{0.55pt}
+\qbezier(70,63)(85,81)(100,99)
+\qbezier(100,99)(124,96)(148,93)
+\qbezier(148,93)(164,78)(180,63)
+\qbezier(70,63)(97,62)(124,61)
+\qbezier(100,99)(112,80)(124,61)
+\qbezier(124,61)(136,77)(148,93)
+\qbezier(124,61)(152,62)(180,63)
+\qbezier(100,99)(103,113)(106,127)
+\qbezier(148,93)(166,107)(184,121)
+\qbezier(148,93)(127,110)(106,127)
+\put(70,63){\circle{5}}\put(124,61){\circle{5}}
+\put(180,63){\circle{5}}\put(106,127){\circle{5}}
+\put(184,121){\circle{5}}}
+\put(100,99){\color[rgb]{0.298,0.510,0.765}\circle*{5}}
+\put(148,93){\color[rgb]{0.992,0.729,0.067}\circle*{5}}
+\put(124,61){\color[rgb]{0.698,0.176,0.106}\circle*{5}}
+\put(0,29){\makebox(0,0)[l]{\fontsize{13}{17}\selectfont\sffamily\bfseries\color{accent}Rejected}}
+\put(0,19){\makebox(0,0)[l]{\fontsize{9}{12}\selectfont\sffamily\color{muted}2026-10-11}}
+\end{picture}
+
+\clearpage\twocolumn
+\tableofcontents
+\clearpage
+\Needspace{5\baselineskip}
 \section{不要忘记}
 
-\algo{土制cph(仅linux)}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{土制cph(仅linux)}
+
+\textbf{用法}：保存为 Python 脚本，传入题号和源文件名；读取 samples-题号中的 .\allowbreak{}in/\allowbreak{}.\allowbreak{}ans。\textbf{注意}：依赖 Linux timeout 与 g+\allowbreak{}+；文件名不要含空格，先确认编译成功。
+
+\begin{lstlisting}[language={Python}]
 from os import system as e, listdir as l
 from sys import argv
 _, q, f = argv  # q: 题号, f: 文件名
@@ -35,7 +92,7 @@ _, q, f = argv  # q: 题号, f: 文件名
 if "py" in f:
 	r = f"python3 {f}"
 else:
-	e(f"g++ -std=c++23 -o2 -Wall {f}.cpp -o {f}")
+	e(f"g++ -std=c++23 -O2 -Wall {f}.cpp -o {f}")
 	r = "./" + f
 
 #
@@ -50,28 +107,37 @@ for i in l(d):
 			print("AC" if o.read().split()==a.read().split() else "WA")
 \end{lstlisting}
 
-\algo{土制cph(全平台)}
-\begin{lstlisting}
-from os import listdir as l, system as e
+\Needspace{5\baselineskip}
+\subsection{土制cph(全平台)}
+
+\textbf{用法}：同上，Python 分支传带 .py 的文件名，C++ 分支传不含扩展名的文件名。\textbf{注意}：需可用的 Python/\allowbreak{}g+\allowbreak{}+，非零退出码按 RE 处理；浮点比较须同时检查 token 数量。
+
+\begin{lstlisting}[language={Python}]
+from os import listdir as l, name as osname
 from os.path import join as jp
-from sys import argv as a
+from sys import argv as a, executable
 import subprocess as s
 _,q,f = a
-if "py" in f:
-    cmd = ["python3", f]
+if f.endswith(".py"):
+    cmd = [executable, f]
 else:
-    e(f"g++ -std=gnu++20 -O2 -Wall {f}.cpp -o {f}")
-    cmd = jp(".", f"{f}.exe")
+    exe = f + (".exe" if osname == "nt" else "")
+    s.run(["g++", "-std=gnu++20", "-O2", "-Wall", f + ".cpp", "-o", exe], check=True)
+    cmd = [jp(".", exe)]
 
 d='samples-'+q.capitalize()
 g,r,p,n='\033[32m','\033[31m','\033[35m','\033[0m'
 for i in l(d):
-    if not 'in' in i: continue
+    if not i.endswith('.in'): continue
     t=jp(d,i[:-2])
     print(i,'测评结果 ',end='',flush=1)
     try:
         k = s.run(cmd, timeout=2, stdin=open(f"{t}in"), 
                  stdout=open(f"{t}out", 'w'), stderr=s.PIPE, text=1)
+        if k.returncode:
+            print(f'{r}RE{n}')
+            if k.stderr: print(k.stderr)
+            continue
         c = lambda o,a : o.read().split() == a.read().split()
         # c = lambda o,a : all(abs(float(x)-float(y))/max(1,abs(float(y)))<=1e-4 
         #               for x,y in zip(o.read().split(),a.read().split()))
@@ -82,8 +148,12 @@ for i in l(d):
         if k.stderr: print(f'{r}{k.stderr}{n}')
 \end{lstlisting}
 
-\algo{随机数}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{随机数}
+
+\textbf{用法}：Rand(x,y) 返回闭区间 [x,y] 的均匀随机整数，要求 x<=y；shuffle 打乱序列。\textbf{注意}：对拍复现时固定种子。
+
+\begin{lstlisting}[language={C++}]
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 int Rand(int x, int y) {
 	return uniform_int_distribution<int>(x, y)(rng);
@@ -91,13 +161,17 @@ int Rand(int x, int y) {
 shuffle(a.begin(), a.end(), rng);
 \end{lstlisting}
 
-\algo{对拍}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{对拍}
+
+\textbf{用法}：依次运行生成器、暴力程序和待测程序，比较 A.out 与 A.ans。\textbf{注意}：先确认三个命令都成功；Windows 用 fc，Linux 用 diff，保留首个失败输入。
+
+\begin{lstlisting}[language={C++}]
 // checker.cpp
 while (1) {
 	system("A_gen > _data.in");  // linux 下换成 ./xxx
 	system("A_bf < _data.in > A.ans");
-	system("A < _data.in > A.ans");
+	system("A < _data.in > A.out");
 	if (system("fc A.out A.ans")) {  // linux 下换成 diff
 		cout << "WA\n"; return 0;
 	} else {
@@ -106,14 +180,22 @@ while (1) {
 }
 \end{lstlisting}
 
-\algo{解除python大数限制}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{解除python大数限制}
+
+\textbf{用法}：Python 3.11+ 在转换超长十进制整数前设置；此处仍限制为 100005 位。\textbf{注意}：set\_\allowbreak{}int\_\allowbreak{}max\_\allowbreak{}str\_\allowbreak{}digits(\allowbreak{}0) 才是完全解除；旧版本需判断该函数是否存在。
+
+\begin{lstlisting}[language={Python}]
 import sys
 sys.set_int_max_str_digits(100005)
 \end{lstlisting}
 
-\algo{常用函数}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{常用函数}
+
+\textbf{用法}：read 读取 int，qpow(\allowbreak{}a,\allowbreak{}b) 求模幂，qpow(a) 求逆元。\textbf{注意}：快读假定输入完整；模运算传入 [0,MOD) 的数，逆元要求 MOD 为质数且 a 非零；乘积超 ll 时用 i128。
+
+\begin{lstlisting}[language={C++}]
 // 快读
 inline int read()
 {
@@ -142,11 +224,16 @@ __builtin_popcountll(i);
 std::popcount((unsigned long long)i);  // c++20
 
 // 计算一个整数的二进制表示中最高位的 1
-__lg(i);  // i 最多 32 位
+__lg(i);  // i > 0；按实参类型支持 int / long long
 \end{lstlisting}
 
-\algo{高精度}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{高精度}
+
+\textbf{用法}：先定义 \_\_int128 的流运算符，再以 cin/\allowbreak{}cout 读写；fixed/\allowbreak{}setprecision 只控制浮点显示。\textbf{注意}：\_\_int128 是固定 128 位整数，不是任意精度；本版不处理最小负数取反。
+
+\begin{lstlisting}[language={C++}]
+
 cout << fixed << setprecision(15);//输出精度
 
 istream& operator>> (istream& is, __int128 &x)
@@ -172,9 +259,12 @@ ostream& operator<< (ostream& os, __int128 &x)
 	write(x); return os << ans;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{多进程评测}
 
-\algo{多进程评测}
-\begin{lstlisting}
+\textbf{用法}：此处仅为接收进程编号并读写数据的示例。\textbf{注意}：它不会自动启动多个进程；并发调度与每个进程的独立输入输出需另写。
+
+\begin{lstlisting}[language={C++}]
 #include <cstdlib>
 #include <iostream>
 using namespace std;
@@ -187,9 +277,12 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{迭代器辅助函数}
 
-\algo{迭代器辅助函数}
-\begin{lstlisting}
+\textbf{注意}：不要递增 end()、递减 begin() 或解引用 end()；set 的迭代器不支持减法，distance 是线性时间。
+\begin{lstlisting}[language={C++}]
+
 函数	作用	是否修改原迭代器	set 上复杂度
 std::next(it)	返回 it 后一个位置的迭代器	否	O(1)
 std::next(it, n)	返回 it 后 n 步的迭代器	否	O(n)
@@ -203,11 +296,13 @@ std::next、std::prev 返回的是新迭代器，原来的 it 不变。
 
 std::advance 会直接改 it，没有返回值。
 
-对 set 来说，std::distance 是 O(n)，不要拿它当区间长度用。区间长度应该用 key 的差值，比如 *next(it) - *prev(it)。
+对 set 来说，std::distance 是 O(n)，不要在高频查询中使用。元素个数与 key 差值不同；要 O(log n) 查排名，请使用树状数组/平衡树。
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{set相关}
 
-\algo{set相关}
-\begin{lstlisting}
+\textbf{用法}：优先用 s.\allowbreak{}lower\_\allowbreak{}bound/\allowbreak{}upper\_\allowbreak{}bound 进行对数查找。\textbf{注意}：比较器须严格弱序，不能用 <\allowbreak{}=；multiset.\allowbreak{}erase(\allowbreak{}x) 会删掉全部 x，只删一个时用 find 后 erase(it)。
+\begin{lstlisting}[language={C++}]
 // 默认：从小到大（std::less<int>）
 set<int> s1;
 // 从大到小（std::greater<int>）
@@ -280,15 +375,20 @@ auto [lo, hi] = s1.equal_range(5);
 // s1.rbegin(), s1.rend()
 // s1.size(), s1.empty()
 // ------------------------------------------------------------
+
 \end{lstlisting}
 
-\algo{vector相关}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{vector相关}
+
+\textbf{注意}：min/\allowbreak{}max\_\allowbreak{}element 要求非空；unique 只去相邻重复，须先排序；reserve 不改变 size，resize 会；扩容后旧迭代器、引用可能失效。
+
+\begin{lstlisting}[language={C++}]
 // 多维 vector，需要 c++17，c++14 只能老老实实写 vector<vector<int>>
 vector a(n+1, vector (n+1, vector<int>(n+1)));
 
 // 最值
-int mx = *min_element(vec.begin(), vec.end(), cmp);
+int mx = *max_element(vec.begin(), vec.end(), cmp);
 int mn = *min_element(vec.begin(), vec.end(), cmp);
 
 // 去重与离散化
@@ -304,12 +404,16 @@ vector <ll> a(n), s(n);
 partial_sum(a.begin(), a.end(), s.begin());
 ll sum = accumulate(a.begin(), a.end(), 0LL);
 
-// 填充 1~n，令 a[i]=i
+// 填充 0~n-1，令 a[i]=i
 iota(a.begin(), a.end(), 0);
 \end{lstlisting}
 
-\algo{整数域三分}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{整数域三分}
+
+\textbf{用法}：给定非空整数闭区间 [l,\allowbreak{}r]，用于严格单峰最大值；末尾比较剩余端点。\textbf{注意}：任意平台区不保证正确；值类型按范围调整，二次函数优先直接检查顶点附近整数。
+
+\begin{lstlisting}[language={C++}]
 // 整数域三分求单峰函数最大值
 int l, r;
 while (l + 2 <= r) {
@@ -325,22 +429,34 @@ while (l + 2 <= r) {
 cout << max(f(l), f(r)) << "\n";
 \end{lstlisting}
 
-\algo{运行时间}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{运行时间}
+
+\textbf{用法}：start 放在待测代码之前，stop 放在之后，duration 单位为毫秒。\textbf{注意}：计时截断属于启发式，不保证答案最优；稳定计时建议用 steady\_\allowbreak{}clock。
+
+\begin{lstlisting}[language={C++}]
 auto start = chrono::high_resolution_clock::now();
 auto stop = chrono::high_resolution_clock::now();
 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
 if (duration > 998) { cout << ans << "\n"; exit(0); }
 \end{lstlisting}
 
-\algo{记得快读快输}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{记得快读快输}
+
+\textbf{注意}：放在任何 cin/\allowbreak{}cout 操作之前；关闭同步后避免混用 scanf/\allowbreak{}printf/\allowbreak{}getchar；交互题在输出后显式 flush。
+
+\begin{lstlisting}[language={C++}]
 ios::sync_with_stdio(0); 
 cin.tie(0), cout.tie(0);
 \end{lstlisting}
 
-\algo{！！！数据范围}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{！！！数据范围}
+
+\textbf{注意}：1LL*a*b 先提升类型，(\allowbreak{}ll)\allowbreak{}(\allowbreak{}a*b) 仍可能先溢出；不要把 memset(a,1) 当成逐元素赋 1；double 有精度限制，是否超时取决于输入量与实现。
+
+\begin{lstlisting}[language={C++}]
 注意爆int
 
     long long: 8字节，-9,223,372,036,854,775,808到9,223,372,036,854,775,807
@@ -350,8 +466,12 @@ cin.tie(0), cout.tie(0);
     尽量不要使用double输入，容易超时
 \end{lstlisting}
 
-\algo{\_\_int128的使用}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{\_\_int128的使用}
+
+\textbf{用法}：本块的 int 宏只在 read/\allowbreak{}print 定义期间生效，之后已 undef。\textbf{注意}：输入须完整；最小负数的绝对值不可用有符号 \_\_int128 表示，必要时改用无符号中间量。
+
+\begin{lstlisting}[language={C++}]
 #define int __int128
 inline void read(int &n){
     int x=0,f=1;
@@ -377,8 +497,12 @@ inline void print(int n){
 #undef int
 \end{lstlisting}
 
-\algo{快读模板}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{快读模板}
+
+\textbf{用法}：read() 读取有符号 int。\textbf{注意}：仅在输入完整、数值不超 int 时使用；EOF 循环与更宽整数需另行处理，register 在现代 C++ 中可省略。
+
+\begin{lstlisting}[language={C++}]
 #define re register
 #define il inline
 il int read()
@@ -389,15 +513,21 @@ il int read()
     return x*f;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{数组离散化}
 
-\algo{数组离散化}
-\begin{lstlisting}
-sort(vals.begin(), vals.end());
+\textbf{用法}：先把全部候选值放入 vals，排序去重；编号可用 lower\_\allowbreak{}bound(\allowbreak{}vals.\allowbreak{}begin(\allowbreak{})\allowbreak{},\allowbreak{}vals.\allowbreak{}end(\allowbreak{})\allowbreak{},\allowbreak{}x)\allowbreak{}-\allowbreak{}vals.\allowbreak{}begin(\allowbreak{})\allowbreak{}+\allowbreak{}1。\textbf{注意}：只保留大小关系，不保留数值间距。
+
+\begin{lstlisting}[language={C++}]
+    sort(vals.begin(), vals.end());
     vals.erase(unique(vals.begin(), vals.end()), vals.end());
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{随机数生成器}
 
-\algo{随机数生成器}
-\begin{lstlisting}
+\textbf{用法}：Rand(x,y) 生成闭区间整数；若同时粘贴“随机数”条目，只保留一份 rng/\allowbreak{}Rand 定义。\textbf{注意}：记录种子方便复现。
+
+\begin{lstlisting}[language={C++}]
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 int Rand(int x, int y) {
 	return uniform_int_distribution<int>(x, y)(rng);
@@ -405,13 +535,18 @@ int Rand(int x, int y) {
 shuffle(a.begin(), a.end(), rng);
 \end{lstlisting}
 
-\algo{随机图}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{随机图}
+
+\textbf{用法}：Graph(n) 生成树；Graph(\allowbreak{}n,\allowbreak{}m,\allowbreak{}root) 生成 1-based 连通无向简单图，指定根属于 [1,n]。\textbf{注意}：结果不保证均匀分布，稠密图拒绝采样较慢；依赖 rng/\allowbreak{}Rand。
+
+\begin{lstlisting}[language={C++}]
 // n 为节点个数
 // m 为边的个数，默认为 -1，表示建树
 // root 为根节点编号，默认为 -1，
 vector<array<int,2>> Graph(int n, int m=-1, int root=-1)
 {
+	assert(n >= 1);
 	assert(m==-1 || (n-1<=m && m<=1LL*n*(n-1)/2));
 	assert(root==-1 || (1<=root && root<=n));
 	vector<array<int,2>> E;
@@ -421,6 +556,7 @@ vector<array<int,2>> Graph(int n, int m=-1, int root=-1)
 		E.push_back( { i, Rand(0, i-1) } );
 	}
 	if (root == -1) { root = Rand(0, n-1); }
+	else { --root; }  // 指定根为 1-based，转为偏移量
 	for (auto& [x, y]: E) {
 		x = (x+root) % n + 1;
 		y = (y+root) % n + 1;
@@ -446,8 +582,12 @@ vector<array<int,2>> Graph(int n, int m=-1, int root=-1)
 }
 \end{lstlisting}
 
-\algo{对拍器}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{对拍器}
+
+\textbf{用法}：先编译 data/\allowbreak{}std/\allowbreak{}solve，比较 std.out 与 solve.\allowbreak{}out，失败输入为 data.in。\textbf{注意}：示例命令按 Windows 写；应检查命令返回值，浮点题改为误差比较。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 int main(){
@@ -455,21 +595,21 @@ int main(){
     while(true){
     cout<<"test: "<<t++<<endl;
     system("data.exe>data.in");//data.exe 随机数生成器
-    system("std.exe<data.in>data.out");//std.exe 标准程序
+    system("std.exe<data.in>std.out");//std.exe 标准程序
     system("solve.exe<data.in>solve.out");//solve.exe 暴力求解算法
     if(system("fc std.out solve.out>diff.log")){
         cout<<"WA"<<endl;
         break;
     } 
 }
-cout<<"AC\n";
+cout<<"对拍结束（已发现不一致）\n";
 }
 /*
 // checker.cpp
 while (1) {
 	system("A_gen > _data.in");  // linux 下换成 ./xxx
 	system("A_bf < _data.in > A.ans");
-	system("A < _data.in > A.ans");
+	system("A < _data.in > A.out");
 	if (system("fc A.out A.ans")) {  // linux 下换成 diff
 		cout << "WA\n"; return 0;
 	} else {
@@ -478,15 +618,20 @@ while (1) {
 }*/
 \end{lstlisting}
 
+\Needspace{5\baselineskip}
 \section{数据结构}
 
-\algo{对顶multiset}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{对顶multiset}
+
+\textbf{用法}：add(\allowbreak{}x)\allowbreak{}/\allowbreak{}del(\allowbreak{}x) 插入或删除一个已有元素，med(\allowbreak{}) 取中位数，dis\_\allowbreak{}to\_\allowbreak{}med(\allowbreak{}) 求绝对偏差和；可用 clear() 重置。\textbf{注意}：偶数时取较大中位数，空集不能查询；每次增删 O(log n)，查询 O(1)。
+
+\begin{lstlisting}[language={C++}]
 //对顶 multiset 数据结构主要用于动态维护一组数的中位数（或第 k 小/大等顺序统计量）
 struct PairingMultiset {
-    int sz;
+    int sz = 0;
     multiset <int> minH, maxH;
-    ll minS, maxS;
+    ll minS = 0, maxS = 0;
     void clear()
     {
         minH.clear(); maxH.clear();
@@ -542,9 +687,12 @@ struct PairingMultiset {
     }
 } p;
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{分块}
 
-\algo{分块}
-\begin{lstlisting}
+\textbf{用法}：读入 1-based arr 后 build；update(\allowbreak{}i,\allowbreak{}v) 单点赋值，query(\allowbreak{}l,\allowbreak{}r,\allowbreak{}v) 统计闭区间内 >=v 的个数。\textbf{复杂度}：修改 O(B log B)，查询 O(\allowbreak{}B+\allowbreak{}(\allowbreak{}n/\allowbreak{}B) log B)，B 约为 sqrt(n)。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn=5e5+10;
@@ -599,7 +747,7 @@ int query(int l,int r,int v){
         for(int i=bl[bi[r]];i<=r;i++){
             if(arr[i]>=v) res++;
         }
-        for(int i=bi[l];i<bi[r];i++){
+        for(int i=bi[l]+1;i<bi[r];i++){
             res+=getcnt(i,v);
         }
     }
@@ -623,8 +771,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{带权并查集}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{带权并查集}
+
+\textbf{用法}：DSU d(\allowbreak{}n)，merge(\allowbreak{}x,\allowbreak{}y) 把 x 所在整列接到 y 列后；query(\allowbreak{}x,\allowbreak{}y) 返回两点间元素数，不同列返回 -1。\textbf{注意}：这是队列距离版，不是通用差分约束版；同列不再合并。
+
+\begin{lstlisting}[language={C++}]
 struct DSU {
     int n;
     vector<int> f, siz, pre;
@@ -647,19 +799,25 @@ struct DSU {
     void merge(int x, int y) {
         x = find(x);
         y = find(y);
+        if (x == y) { return; }
         f[x] = y;
         pre[x] += siz[y];
         siz[y] += siz[x];
         siz[x] = 0;
     }
     int query(int x, int y) {
-        return abs(pre[x]-pre[y])-1;
+        if (!same(x, y)) { return -1; }  // 同时完成路径压缩
+        return x == y ? 0 : abs(pre[x]-pre[y])-1;
     }
 };
 \end{lstlisting}
 
-\algo{Trie}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Trie}
+
+\textbf{用法}：insert(s) 插入，query(s) 统计以 s 为前缀的字符串数，init(\allowbreak{}) 清空；根为 0。\textbf{注意}：字符限 62 种字母数字，空前缀计数未维护；ch 约占 710 MiB，按总字符数缩小 S，勿在栈上定义。
+
+\begin{lstlisting}[language={C++}]
 const string VAL="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const int S=3e6+5, V=62;
 
@@ -699,8 +857,12 @@ struct Trie {
 } trie;
 \end{lstlisting}
 
-\algo{ST表}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{ST表}
+
+\textbf{用法}：ST<int> st(\allowbreak{}a)，query(\allowbreak{}l,\allowbreak{}r) 查询 0-based 闭区间最大值；find/\allowbreak{}find\_\allowbreak{}binary\_\allowbreak{}lifting 返回从 l 开始第一个使最大值 >=x 的右端点，无解为 -1。\textbf{复杂度}：预处理 O(n log n)，查询 O(1)，查找 O(log n)；静态数组，不支持修改。
+
+\begin{lstlisting}[language={C++}]
 template <typename T>
 struct ST {
     int n=0, I=0;
@@ -714,7 +876,7 @@ struct ST {
         st.assign(I+1, vector<T>(n));
         copy(a.begin(), a.end(), st[0].begin());
         for (int i = 1; i <= I; ++i) {
-            for (int j = 0; j+(1<<(i-1)) < n; ++j) {
+            for (int j = 0; j+(1<<i) <= n; ++j) {
                 st[i][j] = max( st[i-1][j], st[i-1][j+(1<<(i-1))] );
             }
         }
@@ -735,24 +897,25 @@ struct ST {
         if (rr < n) { return rr; }
         return -1;
     }
-	int find(int l, int x) {  // 倍增写法
-	    assert(l < n);
-	    if (st[0][l] < x) { return l; }
-	    if (query(l, n-1) >= x) { return n; }
-	    int ans = l, g = st[0][l];
+	int find_binary_lifting(int l, T x) {  // 同一查询的倍增写法
+	    if (l >= n) { return -1; }
+	    int ans = l;
 	    for (int i = I; i >= 0; --i) {
-	        if (ans+(1<<i) < n && gcd(g, st[i][ans]) >= x) {
-	            g = max(g, st[i][ans]);
+	        if (ans+(1<<i) <= n && st[i][ans] < x) {
 	            ans += 1 << i;
 	        }
 	    }
-	    return ans;
+	    return ans == n ? -1 : ans;
 	}
 };
 \end{lstlisting}
 
-\algo{树状数组}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树状数组}
+
+\textbf{用法}：BIT t(\allowbreak{}n)，modify(\allowbreak{}i,\allowbreak{}d) 单点加，query(\allowbreak{}r)\allowbreak{}-\allowbreak{}query(\allowbreak{}l-\allowbreak{}1) 求 1-based 闭区间和，select(\allowbreak{}k) 找最小前缀和 >=k 的位置。\textbf{注意}：modify 不能传 0；select 要求各点非负、n>\allowbreak{}0，越过总和返回 n+1；累计值超 int 时改 ll。
+
+\begin{lstlisting}[language={C++}]
 struct BIT {
 	int n;
     vector<int> t;
@@ -782,8 +945,12 @@ struct BIT {
 BIT T(n);
 \end{lstlisting}
 
-\algo{线段树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线段树}
+
+\textbf{用法}：segmentTree<\allowbreak{}Info> t(\allowbreak{}vector<\allowbreak{}Info>\allowbreak{}\{.\allowbreak{}.\allowbreak{}.\allowbreak{}\})，modify(\allowbreak{}pos,\allowbreak{}x) 单点赋值，query(\allowbreak{}l,\allowbreak{}r) 查询 0-based 闭区间最大值。\textbf{注意}：底层 dfs/\allowbreak{}findFirst/\allowbreak{}findLast 用半开区间 [x,y)；pred 必须允许整段剪枝（如 mx>\allowbreak{}=\allowbreak{}x）；无懒标记，不支持任意区间更新。
+
+\begin{lstlisting}[language={C++}]
 #define lson (p << 1)
 #define rson (p << 1 | 1)
 #define m ((l+r)>>1)
@@ -824,14 +991,14 @@ struct segmentTree {
 	    if (y <= l || r <= x) { return {-1,Info()}; }
 	    if (x <= l && r <= y && !pred(a[p])) { return {-1,Info()}; }
 	    if (l == r-1) { return {l,a[p]}; }
-	    pair<int,Info> res = findLast(lson, m, r, x, y, pred);
+	    pair<int,Info> res = findLast(rson, m, r, x, y, pred);
 	    if (res.first == -1) {
-	        res = findLast(rson, l, m, x, y, pred);
+	        res = findLast(lson, l, m, x, y, pred);
 	    }
 	    return res;
 	}
 
-    segmentTree(int n = 0): n(n), a(4 << __lg(n)) { }
+    segmentTree(int n = 0): n(n), a(4 * max(1, n)) { }
     segmentTree(vector<Info>&& b): segmentTree(b.size()) {
         function<void(int,int,int)> build = [&](int p, int l, int r) -> void {
             if (r - l == 1) { a[p] = Info(b[l]); return; }
@@ -839,7 +1006,7 @@ struct segmentTree {
             build(rson, m, r);
             push_up(p);
         };
-        build(1, 0, n);
+        if (n) { build(1, 0, n); }
     }
 
     void modify(int pos, int x) {
@@ -851,7 +1018,7 @@ struct segmentTree {
     }
 
     void Debug(int p, int l, int r) {
-        cerr << format("a[{}] = [ {}, {}, {} ]\n", p, l, r, a[p].mx);
+        cerr << "a[" << p << "] = [ " << l << ", " << r << ", " << a[p].mx << " ]\n";
         if (l == r - 1) { return; }
         Debug(lson, l, m);
         Debug(rson, m, r);
@@ -863,15 +1030,17 @@ struct segmentTree {
 #undef m
 struct Info {
     int mx;
-    Info(int mx = 0): mx(mx) { }
+    Info(int mx = numeric_limits<int>::lowest()): mx(mx) { }
     friend Info operator+ (Info u, Info v) {
         return Info( max(u.mx, v.mx) );
     }
 };
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{替罪羊树}
 
-\algo{替罪羊树}
-\begin{lstlisting}
+\textbf{用法}：两个 ScapegoatTree 版本二选一；insert/\allowbreak{}erase、rank（1-\allowbreak{}based）、kth、pre/\allowbreak{}nxt。\textbf{注意}：大数组对象放全局/静态；删除不会回收 cnt，容量按历史插入量估计；后继的 x+1 不可溢出，kth 先检查范围。
+\begin{lstlisting}[language={C++}]
 /*替罪羊树 是一种依靠重构操作维持平衡的重量平衡树．替罪羊树会在插入、删除操作后，检测树是否发生失衡；如果失衡，将有针对性地进行重构以恢复平衡．
 一般地，替罪羊树不支持区间操作，且无法完全持久化；但它具有实现简单、常数较小的优点．
 */
@@ -885,7 +1054,7 @@ struct ScapegoatTree {
     int root, cnt;
     int key[MAXN], num[MAXN];
     int l[MAXN], r[MAXN];
-    int sz[MAXN], dif[MAXN];
+    int sz[MAXN]{}, dif[MAXN]{};
     int v[MAXN];
 
     int vc;
@@ -1099,6 +1268,7 @@ struct ScapegoatTree {
     // 清空
     void clear() {
         root = 0;
+        sz[0] = 0;
         cnt = 0;
         vc = 0;
         top = fa = side = 0;
@@ -1288,18 +1458,22 @@ struct ScapegoatTree {
     }
     void clear() {
         root = 0;
+        sz[0] = 0;
         cnt = 0;
         vc = 0;
         top = fa = side = 0;
     }
 };
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{逆序对}
 
-\algo{逆序对}
-\begin{lstlisting}
+\textbf{用法}：msort(\allowbreak{}a,\allowbreak{}0,\allowbreak{}n-\allowbreak{}1) 返回严格逆序对数，并将原数组排序。\textbf{复杂度}：O(n log n) 时间、O(n) 辅助空间；计数用 ll，相等元素不计逆序。
+
+\begin{lstlisting}[language={C++}]
 ll msort(vector<int> &a, int l, int r)
 {
-    if (l == r) { return 0; }
+    if (l >= r) { return 0; }
     int mid = (l + r) >> 1;
     ll ans=0;
     ans += msort(a, l, mid);
@@ -1317,8 +1491,12 @@ ll msort(vector<int> &a, int l, int r)
 }
 \end{lstlisting}
 
-\algo{笛卡尔树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{笛卡尔树}
+
+\textbf{用法}：下标 1..n，预清空 L/\allowbreak{}R，单调栈建立小根笛卡尔树，根为 stk[0]。\textbf{注意}：n>\allowbreak{}0；相等值按原下标稳定保留；遍历最坏可能达到 n 层。构建 O(n)。
+
+\begin{lstlisting}[language={C++}]
 vector<int> stk;
 for (int i = 1; i <= n; ++i) {
 	int flag = 0;
@@ -1343,8 +1521,12 @@ function<void(int)> dfs = [&](int x){
 dfs(stk[0]);
 \end{lstlisting}
 
-\algo{可持久化}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{可持久化}
+
+\textbf{用法}：此块为版本数组的输入输出样例，对应下一份历史单点修改模板。\textbf{注意}：不是实现代码；版本 0 为初始数组，每次操作产生新版本。
+
+\begin{lstlisting}[language={C++}]
 5 10
 59 46 14 87 41
 0 2 1
@@ -1366,8 +1548,12 @@ dfs(stk[0]);
 46
 \end{lstlisting}
 
-\algo{线段树模板}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线段树模板}
+
+\textbf{用法}：build(\allowbreak{}1,\allowbreak{}1,\allowbreak{}n)，update(\allowbreak{}1,\allowbreak{}1,\allowbreak{}n,\allowbreak{}l,\allowbreak{}r,\allowbreak{}x,\allowbreak{}type)，type=\allowbreak{}1 乘、type=2 加；query 求闭区间和模 p。\textbf{注意}：乘标记初值为 1，先乘后加，p>0；x 先取模，乘积按范围提升类型。
+
+\begin{lstlisting}[language={C++}]
 //区间乘法
 #include<bits/stdc++.h>
 using namespace std;
@@ -1472,8 +1658,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{主席树（可持久化线段树）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{主席树（可持久化线段树）}
+
+\textbf{用法}：root[0]=\allowbreak{}build(\allowbreak{}1,\allowbreak{}n)，update 返回新版本根，query(\allowbreak{}root[v],\allowbreak{}1,\allowbreak{}n,\allowbreak{}i) 查历史单点。\textbf{注意}：本版是可持久化数组，不是区间第 k 小；查询操作也须保留对应根。空间 O(n+m log n)。
+
+\begin{lstlisting}[language={C++}]
 //对于单点历史修改与查询
 #include<bits/stdc++.h>
 using namespace std;
@@ -1533,8 +1723,12 @@ signed main(){
 }
 \end{lstlisting}
 
-\algo{开点线段树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{开点线段树}
+
+\textbf{用法}：用于大值域上的稀疏区间修改/求和，按需创建左右子节点。\textbf{注意}：建点计数不能超过池容量，懒标记下推前保证子节点存在；多测重置根与节点池，不能假定一定省内存。
+
+\begin{lstlisting}[language={C++}]
 //适用于范围很大，但是操作较少
 //用于减小空间复杂度
 //如果操作过多，则与没有优化相同，因此可能被卡
@@ -1627,8 +1821,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{权值线段树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{权值线段树}
+
+\textbf{用法}：在离散化值域上 build；update(\allowbreak{}k,\allowbreak{}cnt) 调整数值频次，query 查频次，kth 返回第 k 大。\textbf{注意}：按右子树频次决定去向，频次非负，1<\allowbreak{}=\allowbreak{}k<\allowbreak{}=总数；数组 tree/\allowbreak{}a 须补齐。
+
+\begin{lstlisting}[language={C++}]
 //权值线段树模板
 #define lson pos<<1
 #define rson pos<<1|1
@@ -1673,15 +1871,19 @@ int kth(int pos,int l,int r,int k)//查询第k大值是多少
 	int mid=(l+r)>>1;
 	if(l==r)
 		return l;
-	if(k<mid)
+	if(k<=tree[rson])
 		return kth(rson,mid+1,r,k);
 	else
-		return kth(lson,l,mid,k-mid);
+		return kth(lson,l,mid,k-tree[rson]);
 }
 \end{lstlisting}
 
-\algo{线段树上最值操作}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线段树上最值操作}
+
+\textbf{用法}：setmin 将闭区间每个值改为 min(原值,v)，维护 sum、最大值、次大值和最大值个数。\textbf{注意}：仅当次大值 <\allowbreak{}v<最大值时可整段打标；sentinel 应小于所有真实值，复杂度需势能分析。
+
+\begin{lstlisting}[language={C++}]
 //基本的实现
 #include<bits/stdc++.h>
 using namespace std;
@@ -1795,8 +1997,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{线段树上序列操作}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线段树上序列操作}
+
+\textbf{用法}：0/\allowbreak{}1 序列上 Update 赋值、Reverse 翻转；query 查 1 的个数，get<\allowbreak{}0>\allowbreak{}(\allowbreak{}querylength(\allowbreak{}.\allowbreak{}.\allowbreak{}.\allowbreak{})\allowbreak{}) 查最长连续 1。\textbf{注意}：先核对原题的下标转换，覆盖和翻转标记须正确合成。
+
+\begin{lstlisting}[language={C++}]
 //线段树上的序列操作，稍难一点
 //求连续1的最长子列，有点难度，容易打错
 
@@ -1938,8 +2144,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{非经典线段树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{非经典线段树}
+
+\textbf{用法}：当前实际代码维护区间加、和、平方和，用 E[x²]-E[x]² 求方差。\textbf{注意}：不是区间开方模板；更新平方和要使用更新前的和，输出精度和微小负误差按题意处理。
+
+\begin{lstlisting}[language={C++}]
 // 这类题目一般是可以看出来使用线段树，但是不能满足一般的懒更新的条件
 //简单的一般需要进行势能分析，再减枝就可以解决
 //例如 洛谷 P4145，此题是开根号，换为取模同理
@@ -2035,8 +2245,13 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{Kruskal重构树}
-\begin{lstlisting}
+
+\Needspace{5\baselineskip}
+\subsection{Kruskal重构树}
+
+\textbf{用法}：按权排序合并，原点为叶子，新点存合并边权，树上 LCA 权值为最小生成树路径最大边。\textbf{注意}：最多 2n-1 个点，边数组按 m 分配；不连通时建森林并先判连通。
+
+\begin{lstlisting}[language={C++}]
 //Kruskal重构树: 最小生成树上任意两点路径最大值=新节点LCA的权值
 const int maxn=1e5+10,maxm=2*maxn,maxk=3*maxn,maxh=20;
 struct edge{ int u,v,w; }e[maxk];
@@ -2071,9 +2286,12 @@ int lca(int u,int v){
     return st[u][0];
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{左偏树}
 
-\algo{左偏树}
-\begin{lstlisting}
+\textbf{用法}：merge 合并小根堆，pop/\allowbreak{}remove 删除根，find 定位所属堆；后半部分为题目变体，二选一。\textbf{注意}：被删节点不能再参与操作；dis[0] 的约定、并查集代表同步更新。
+
+\begin{lstlisting}[language={C++}]
 //可并堆结构，两个堆的合并时间复杂度为log（n）
 //查询操作需要并查集的优化
 //P3377,模板,删除一个堆中最小值
@@ -2267,8 +2485,12 @@ cin.tie(0), cout.tie(0);
 }
 \end{lstlisting}
 
-\algo{虚树的构建}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{虚树的构建}
+
+\textbf{用法}：先对原树 dfs 预处理 dfn/\allowbreak{}LCA，再把关键点放入 arr，buildvtree 返回虚树根；空集返回 0。\textbf{注意}：每轮清空 arr、iskey 和相关 DP，只清本轮 tmp 节点边表；边表示原树路径而非一条原边。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn=1e5+10;
@@ -2335,17 +2557,23 @@ int buildvtree(){
     for(int i=0;i<(int)tmp.size();i++){
         hn[tmp[i]]=0;
     }
-    for(int i=0;i<tmp.size()-1;i++){
+    for(int i=0;i+1<(int)tmp.size();i++){
         add2(getlca(tmp[i],tmp[i+1]),tmp[i+1]);
     }
-    return tmp[0];
+    return tmp.empty() ? 0 : tmp[0];
 }
+
 \end{lstlisting}
 
+\Needspace{5\baselineskip}
 \section{图论}
 
-\algo{最短路}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最短路}
+
+\textbf{用法}：此 bitset 片段实际求传递闭包（可达性），先令 b[u][v]=\allowbreak{}1，再执行中转点外层循环。\textbf{注意}：不计算带权最短距离；需要长度 0 路径可达时设置 b[i][i]。
+
+\begin{lstlisting}[language={C++}]
 bitset<N> b[N];
 for (int j = 1; j <= n; ++j) {  // 注意中转点在最外层
     for (int i = 1; i <= n; ++i) {
@@ -2353,9 +2581,11 @@ for (int j = 1; j <= n; ++j) {  // 注意中转点在最外层
     }
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{判奇环（无向图）}
 
-\algo{判奇环（无向图）}
-\begin{lstlisting}
+\textbf{用法}：hasOddCycle(\allowbreak{}n,\allowbreak{}adj)，顶点为 0..n-1，true 表示存在奇环。\textbf{注意}：无向边加入两次，包含不连通图；示例提示文字提交前移除，递归深链注意爆栈。O(\allowbreak{}n+\allowbreak{}m)。
+\begin{lstlisting}[language={C++}]
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -2406,8 +2636,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{最小生成树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最小生成树}
+
+\textbf{用法}：kruskal 读入边并排序，用普通并查集 dsu 合并，G 存生成树。\textbf{注意}：cnt 必须等于 n-1 才连通，否则为生成森林；总权用 ll，dsu 不要误用队列距离版。O(\allowbreak{}m log m)。
+
+\begin{lstlisting}[language={C++}]
 int n, m;
 vector<pii> G[N];
 int kruskal()
@@ -2432,8 +2666,12 @@ int kruskal()
 }
 \end{lstlisting}
 
-\algo{拓扑排序}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{拓扑排序}
+
+\textbf{用法}：预先统计有向边入度 deg，运行后 topo.\allowbreak{}size(\allowbreak{})\allowbreak{}=\allowbreak{}=\allowbreak{}n 表示 DAG。\textbf{注意}：过程会修改 deg，多次调用先保存副本；输出顺序不唯一，字典序最小用小根堆。O(\allowbreak{}n+\allowbreak{}m)。
+
+\begin{lstlisting}[language={C++}]
 queue<int> q;
 for (int i = 1; i <= n; ++i) {
 	if (deg[i] == 0) { q.push(i); }
@@ -2448,8 +2686,12 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-\algo{LCA}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{LCA}
+
+\textbf{用法}：填满 mn 为 INF、根深度从 1 起，dfs(\allowbreak{}root,\allowbreak{}0) 后调用 LCA(u,v)。\textbf{注意}：该函数返回路径最小边权，不返回祖先编号；u=\allowbreak{}=\allowbreak{}v 返回 INF。预处理 O(n log n)，查询 O(log n)。
+
+\begin{lstlisting}[language={C++}]
 const int N=5e5+5, I=20;
 int n, m, s, dep[N], f[I+5][N], mn[I+5][N];
 vector <pii> G[N];
@@ -2492,8 +2734,12 @@ int LCA(int u, int v)
 }
 \end{lstlisting}
 
-\algo{树的直径与中心}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树的直径与中心}
+
+\textbf{用法}：清空 d/\allowbreak{}mxd，dfs(\allowbreak{}root,\allowbreak{}0)，mxd 为无权树直径边数。\textbf{注意}：本段没有恢复直径路径或中心；中心为直径路径中间的一点或两点。O(\allowbreak{}n)。
+
+\begin{lstlisting}[language={C++}]
 int d[N], mxd;
 void dfs(int u, int fa)
 {
@@ -2507,8 +2753,12 @@ void dfs(int u, int fa)
 }
 \end{lstlisting}
 
-\algo{点分治与树的重心}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{点分治与树的重心}
+
+\textbf{用法}：先求重心并以重心重新计算 siz，再 work；在 work 中补充各子树距离的统计与去重贡献。\textbf{注意}：当前是分治骨架，尚无具体答案；vis 为已移除的重心，距离累加可需 ll。
+
+\begin{lstlisting}[language={C++}]
 int n, siz[N], dis[N];
 bool vis[N];
 vector<pii> G[N];
@@ -2567,8 +2817,12 @@ int main()
 }
 \end{lstlisting}
 
-\algo{基环树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{基环树}
+
+\textbf{用法}：无向连通图恰有 n 条边时，并查集找出闭环边 s-\allowbreak{}t，其余边组成树，dfs 找出环上的点。\textbf{注意}：输出将点排序，失去环顺序；不用于一般多环图，s/\allowbreak{}t/\allowbreak{}n 与普通 dsu 需补齐。
+
+\begin{lstlisting}[language={C++}]
 vector<int> G[N], cycle;
 void dfs(int u, int fa)
 {
@@ -2589,17 +2843,23 @@ int main()
 	for (int i = 1; i <= n; ++i) {
 	    int u, v;
 	    cin >> u >> v;
-	    G[u].push_back(v);
-	    G[v].push_back(u);
 	    if (d.same(u, v)) { s=u; t=v; }
-	    d.merge(u, v);
+	    else {
+	        G[u].push_back(v);
+	        G[v].push_back(u);
+	        d.merge(u, v);
+	    }
 	}
 	dfs(s, 0);
 }
 \end{lstlisting}
 
-\algo{Hierholzer求欧拉路}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Hierholzer求欧拉路}
+
+\textbf{用法}：本版 n 为边数，点号至多 2n；无向边两端共用唯一边 id，deg 按边计算。\textbf{注意}：非零度点须连通，奇度点为 0 或 2，结果为边 id；回溯后逆序才是行走顺序。O(\allowbreak{}n)。
+
+\begin{lstlisting}[language={C++}]
 int n, deg[N<<1], cur[N<<1];
 bool vis[N];
 vector<int> ans;
@@ -2619,6 +2879,7 @@ void dfs(int u)
 
 int main()
 {
+	if (n == 0) { cout << "YES\n"; return 0; }
 	int s = 1;
 	while (s <= 2*n && deg[s] % 2 == 0) { ++s; }
 	if (s > 2 * n) {
@@ -2631,7 +2892,7 @@ int main()
 	    cnt += deg[i] % 2;
 	}
 	if (cnt > 2) {
-	    cout << "NO\n"; return;
+	    cout << "NO\n"; return 0;
 	}
 	
 	dfs(s);
@@ -2639,6 +2900,7 @@ int main()
 	if (ans.size() != n) {
 	    cout << "NO\n";
 	} else {
+	    reverse(ans.begin(), ans.end());  // 回溯顺序转为行走顺序
 	    cout << "YES\n";
 	    for (auto x: ans) {
 	        cout << x << " \n"[x == ans.back()];
@@ -2647,8 +2909,12 @@ int main()
 }
 \end{lstlisting}
 
-\algo{DSU on tree}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{DSU on tree}
+
+\textbf{用法}：dfs\_\allowbreak{}init(\allowbreak{}root,\allowbreak{}0)，再 dfs\_\allowbreak{}solve(\allowbreak{}root,\allowbreak{}0,\allowbreak{}true)；轻子树清空，重子树保留。\textbf{注意}：补齐 cnt、ccnt、ans 并初始化，颜色离散化；此例统计子树颜色出现次数是否相同。O(\allowbreak{}n log n)。
+
+\begin{lstlisting}[language={C++}]
 const int N=2e5+5;
 int n, c[N], siz[N], hvs[N];
 int L[N], R[N], dfn[N], totdfn;
@@ -2704,8 +2970,12 @@ void dfs_solve(int u, int fa, bool keep)
 }
 \end{lstlisting}
 
-\algo{tarjan}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{tarjan}
+
+\textbf{用法}：SCC s(\allowbreak{}n)，add\_\allowbreak{}edge(\allowbreak{}u,\allowbreak{}v) 添加有向边，work() 返回 1-based 分量编号 col。\textbf{注意}：同编号等价于互相可达，缩点后为 DAG；编号是出栈顺序，别当原图拓扑序直接用。O(\allowbreak{}n+\allowbreak{}m)。
+
+\begin{lstlisting}[language={C++}]
 struct SCC {
 	int n, totdfn=0, colcnt=0;
 	stack<int> stk;
@@ -2749,8 +3019,12 @@ struct SCC {
 };
 \end{lstlisting}
 
-\algo{树哈希}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树哈希}
+
+\textbf{用法}：getHash(\allowbreak{}root,\allowbreak{}0) 求有根树无序子树哈希，has 相等用于快速比较。\textbf{注意}：概率算法可能碰撞；无根树先取重心（一或两个），比较同一随机种子下的结果。O(\allowbreak{}n)。
+
+\begin{lstlisting}[language={C++}]
 using ull = unsigned long long;
 const ull msk = chrono::steady_clock::now().time_since_epoch().count();
 
@@ -2778,8 +3052,13 @@ void getHash(int u, int fa)
 }
 \end{lstlisting}
 
-\algo{Bellman-Ford / SPFA（判负环）}
-\begin{lstlisting}
+
+\Needspace{5\baselineskip}
+\subsection{Bellman-Ford / SPFA（判负环）}
+
+\textbf{用法}：build(\allowbreak{}n)、add(\allowbreak{}u,\allowbreak{}v,\allowbreak{}w) 后 spfa()，true 表示从点 1 可达的负环。\textbf{注意}：判全图负环须把所有点距离置 0 并入队；最坏 O(\allowbreak{}nm)，dis/松弛和按范围改 ll。
+
+\begin{lstlisting}[language={C++}]
 //Bellman-Ford + SPFA优化, O(n*m), 可用于判负环
 #include<bits/stdc++.h>
 using namespace std; 
@@ -2798,8 +3077,12 @@ bool spfa(){ dis[1]=0; upfill[1]++; q.push(1); enter[1]=true;
     return false; }
 \end{lstlisting}
 
-\algo{Floyd 全源最短路}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Floyd 全源最短路}
+
+\textbf{用法}：对角线置 0，其余置 INF，重边取最小，再 floyd。\textbf{注意}：中转点最外层；负环可由 dis[i][i]<0 检测；INF 要大于实际距离且加法不溢出。O(\allowbreak{}n³) 时间、O(n²) 空间。
+
+\begin{lstlisting}[language={C++}]
 //全源最短路 O(n^3), 允许负边但不能有负环
 const int maxn=1001,inf=1e8; int dis[maxn][maxn];
 void floyd(){ for(int b=1;b<=n;b++)for(int i=1;i<=n;i++)for(int j=1;j<=n;j++)
@@ -2807,8 +3090,12 @@ void floyd(){ for(int b=1;b<=n;b++)for(int i=1;i<=n;i++)for(int j=1;j<=n;j++)
         dis[i][j]=dis[i][b]+dis[b][j]; }
 \end{lstlisting}
 
-\algo{树上倍增}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树上倍增}
+
+\textbf{用法}：先设根深度为 1、0 号虚父深度为 0，预处理 st，power 取足够大的最高位；getkthAncestor(\allowbreak{}i,\allowbreak{}k) 返回祖先或 -1。\textbf{注意}：此 dfs 按有向父子边写，无向树须跳过父亲。
+
+\begin{lstlisting}[language={C++}]
 //快速查询从节点往上走k步的祖先, 预处理O(n log n), 查询O(log n)
 const int maxn=5e5+10; int st[maxn][32],deep[maxn],power;
 void dfs(int i,int f){ deep[i]=(i==0?1:deep[f]+1); st[i][0]=f;
@@ -2818,16 +3105,23 @@ int getkthAncestor(int i,int k){ if(deep[i]<=k)return -1; int s=deep[i]-k;
     for(int p=power;p>=0;p--) if(deep[st[i][p]]>=s) i=st[i][p]; return i; }
 \end{lstlisting}
 
-\algo{树的直径}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树的直径}
+
+\textbf{用法}：无权树两次 dfs，第二次从第一次最远点出发；每次遍历前重置 maxd。\textbf{注意}：边数为距离；带非负权可累加边权，负权树不适用两次最远点法。O(\allowbreak{}n)。
+
+\begin{lstlisting}[language={C++}]
 //两次DFS求树的直径
 int maxd=0,far=1;
 void dfs(int u,int fa,int d){ if(d>maxd){maxd=d;far=u;} for(int v:g[u])if(v!=fa)dfs(v,u,d+1); }
 // dfs(1,0,0); dfs(far,0,0); maxd即为直径
 \end{lstlisting}
 
-\algo{树的重心}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树的重心}
+
+\textbf{用法}：清空 sz，dfs(\allowbreak{}root,\allowbreak{}0,\allowbreak{}centroid)，centroid 得到一个重心。\textbf{注意}：n 必须是当前连通子树大小；可能有两个重心，此版仅保存其中一个。O(\allowbreak{}n)。
+\begin{lstlisting}[language={C++}]
 void dfs(int u, int fa, int &centroid) {
     sz[u] = 1;
     bool ok = true;
@@ -2842,13 +3136,18 @@ void dfs(int u, int fa, int &centroid) {
 }
 \end{lstlisting}
 
-\algo{最大流}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最大流}
+
+\textbf{用法}：Flow f，add\_\allowbreak{}edge(\allowbreak{}u,\allowbreak{}v,\allowbreak{}cap) 建有向容量边，dicnic(\allowbreak{}s,\allowbreak{}t) 求最大流。\textbf{注意}：s!=\allowbreak{}t、容量非负，流量用 ll；调用会修改残量网络，多测清空边表；数组较大时全局定义。一般复杂度 O(V²E)。
+
+\begin{lstlisting}[language={C++}]
 const ll INF = 9e18; 
 struct Flow {
     vector<tuple<int,ll,int>> G[N];  // 终点，流量，反边
     int dis[N], now[N];  // now[u] 为当前弧
     void add_edge(int u, int v, ll w) {
+        if (u == v) { return; }  // 自环不贡献 s-t 最大流
         G[u].push_back( { v, w, G[v].size() } );
         G[v].push_back( { u, 0, G[u].size()-1 } );
     }
@@ -2882,6 +3181,7 @@ struct Flow {
         return 0;
     }
     ll dicnic(int st, int ed) {
+        if (st == ed) { return 0; }
         for (ll flow=0, res;;) {
             bfs(st);
             if (dis[ed] == 0) { return flow; }
@@ -2894,8 +3194,12 @@ struct Flow {
 };
 \end{lstlisting}
 
-\algo{最近公共祖先（LCA）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最近公共祖先（LCA）}
+
+\textbf{用法}：无向树建边，dfs1(\allowbreak{}s,\allowbreak{}0)、dfs2(\allowbreak{}s,\allowbreak{}s)，LCA(\allowbreak{}x,\allowbreak{}y) 返回祖先编号。\textbf{注意}：链深递归可能爆栈，多测清空 hson/\allowbreak{}top；预处理 O(n)，查询 O(log n)。
+
+\begin{lstlisting}[language={C++}]
 //利用树链剖分的方法
 #include<bits/stdc++.h>
 using namespace std;
@@ -2969,8 +3273,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{树链剖分}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树链剖分}
+
+\textbf{用法}：dfs1/\allowbreak{}dfs2 预处理，在线段树上对新编号操作，路径拆为多段，子树对应连续区间。\textbf{注意}：本版点权、模运算；边权版需排除 LCA 点，多测清空全局状态，乘长度先用 ll。路径 O(log² n)。
+
+\begin{lstlisting}[language={C++}]
 #include<algorithm>
 #include<iostream>
 #include<cstdlib>
@@ -3155,8 +3463,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{最大路匹配}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最大路匹配}
+
+\textbf{用法}：当前为二分图增广路匹配，match 记录对侧匹配，逐个左部点尝试增广。\textbf{注意}：每次增广重新清访问标记；仅适用于二分图，不是一般图最大匹配。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 const int N=510;
@@ -3195,8 +3507,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{Dijkstra算法}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Dijkstra算法}
+
+\textbf{用法}：建带权邻接表，源点 dis=\allowbreak{}0，堆中取最小距离进行松弛；同块版本择一。\textbf{注意}：边权必须非负，跳过已确定或过期状态；距离/\allowbreak{}INF 用足够宽类型。堆版 O((n+m) log n)。
+
+\begin{lstlisting}[language={C++}]
 //小根堆实现较为简单，这里采用以点为复杂度的反向索引堆的优化,一般不会用
 #include<bits/stdc++.h>
 using namespace std;
@@ -3298,8 +3614,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{分层图最短路}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{分层图最短路}
+
+\textbf{用法}：把状态写成（已使用次数,原顶点），普通边留在本层，特殊操作连下一层；在所有合法终点层取最优。\textbf{注意}：各层的点边容量、总内存和边权条件均要核对。
+
+\begin{lstlisting}[language={C++}]
 //无论是在bfs上分层还是dijkstra上，本质其实就是把原图上的点与其的不同状态整合出更多的点
 //难点在于如何将点上的状态给储存下来，以及如何转移
 #include<bits/stdc++.h>
@@ -3379,8 +3699,12 @@ struct Compare {
 */
 \end{lstlisting}
 
-\algo{双向广搜}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{双向广搜}
+
+\textbf{用法}：从起点和终点分别 BFS，扩展较小前沿。\textbf{注意}：反向搜索需使用反图；普通 BFS 要求单位边权，交会判定须保证最短层次；本块按原题状态定义使用。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -3418,8 +3742,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{tarjan(强连通分量)}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{tarjan(强连通分量)}
+
+\textbf{用法}：对所有未访问点运行 tarjan，收集有向图 SCC。\textbf{注意}：回边仅指向仍在栈中的点时更新 low；与无向图割点/双连通算法区分。O(\allowbreak{}n+\allowbreak{}m)。
+
+\begin{lstlisting}[language={C++}]
 //强连通分量求解
 int dfn[N], low[N], dfncnt, s[N], in_stack[N], tp;
 int scc[N], sc;  // 结点 i 所在 SCC 的编号
@@ -3447,8 +3775,12 @@ void tarjan(int u) {
 }
 \end{lstlisting}
 
-\algo{边双连通分量}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{边双连通分量}
+
+\textbf{用法}：无向边成对添加，DFS 时按边 id 排除反向父边，收集去掉桥后的连通块。\textbf{注意}：不能只排除父顶点（会误判重边）；对全部连通分量启动 DFS。O(n+m)。
+
+\begin{lstlisting}[language={C++}]
 #include <algorithm>
 #include <iostream>
 #include <stack>
@@ -3496,8 +3828,12 @@ void tarjan(int u, int in) {
 }
 \end{lstlisting}
 
-\algo{割边}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{割边}
+
+\textbf{用法}：成对 add，tot 从 1 开始，反向边为 ei\textasciicircum{}1；tarjan 后 cutedge[原边号] 标记桥。\textbf{注意}：桥条件 low[v]>\allowbreak{}dfn[u]，重边按 id 跳过反向父边。O(\allowbreak{}n+\allowbreak{}m)。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn=1e5+10;
@@ -3547,8 +3883,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{点双连通分量}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{点双连通分量}
+
+\textbf{用法}：uadd 添加无向边，对每个未访问点设 root 并 tarjan；dcc 存点双分量。\textbf{注意}：割点可以属于多个点双；根割点与孤立点特殊处理，low[v]>\allowbreak{}=\allowbreak{}dfn[u] 为分界。
+
+\begin{lstlisting}[language={C++}]
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -3616,8 +3956,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{割点}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{割点}
+
+\textbf{用法}：对每个连通分量 Tarjan(\allowbreak{}i,\allowbreak{}i)，flag 为割点标记。\textbf{注意}：非根条件 low[v]>\allowbreak{}=\allowbreak{}dfn[u]，根需至少两个 DFS 子树；与桥的严格不等号不同。O(\allowbreak{}n+\allowbreak{}m)。
+
+\begin{lstlisting}[language={C++}]
 /*
 洛谷 P3388 【模板】割点（割顶）
 */
@@ -3677,15 +4021,278 @@ int main() {
   return 0;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{2-SAT}
 
+\textbf{用法}：TwoSAT s(n)，变量 0-based，文字用 pos/\allowbreak{}neg；addOr、imply、setTrue 等建约束，solve() 后读取 ans。\textbf{注意}：\textasciicircum{}1 只对原始文字有效，辅助节点不能取反；蕴含必须有逆否边。O(\allowbreak{}V+\allowbreak{}E)。
+\begin{lstlisting}[language={C++}]
+#include<bits/stdc++.h>
+using namespace std;
+
+struct TwoSAT {
+    int n;
+    vector<int> head,to,nxt,ans;
+
+    TwoSAT(int n):n(n),head(2*n,-1){}
+
+    // 变量 x 从 0 开始编号
+    // pos(x) 表示 x 为真，neg(x) 表示 x 为假
+    // 两个相反的文字编号相差 1，可以用 ^1 取反
+    int pos(int x) { return x*2; }
+    int neg(int x) { return x*2+1; }
+
+    // 创建辅助节点，用于线段树优化建图
+    // 辅助节点不需要对应的否定节点
+    int newNode() {
+        head.push_back(-1);
+        return (int)head.size()-1;
+    }
+
+    // 添加一条有向边 u -> v
+    void add(int u,int v) {
+        to.push_back(v);
+        nxt.push_back(head[u]);
+        head[u]=(int)to.size()-1;
+    }
+
+    // a 或 b 至少一个为真：a | b
+    // 等价于 !a -> b，!b -> a
+    void addOr(int a,int b) {
+        add(a^1,b);
+        add(b^1,a);
+    }
+
+    // a -> b
+    // 必须同时添加逆否命题 !b -> !a
+    // 仅适用于原始布尔变量的文字
+    void imply(int a,int b) {
+        add(a,b);
+        add(b^1,a^1);
+    }
+
+    // 强制 a 为真：!a -> a
+    void setTrue(int a) {
+        add(a^1,a);
+    }
+
+    // 强制 a 为假：a -> !a
+    void setFalse(int a) {
+        add(a,a^1);
+    }
+
+    // a、b 恰好一个为真
+    void addXor(int a,int b) {
+        addOr(a,b);
+        addOr(a^1,b^1);
+    }
+
+    // 非递归 Tarjan，避免深层图爆栈
+    // 返回是否有解，ans[i] 为变量 i 的取值
+    bool solve() {
+        int N=head.size();
+        vector<int> dfn(N),low(N),bel(N,-1),cur(N);
+        vector<int> stk,dfs;
+        vector<char> in(N);
+
+        int timer=0,scc=0;
+
+        for(int i=0;i<N;i++) {
+            if(dfn[i]) continue;
+
+            dfn[i]=low[i]=++timer;
+            cur[i]=head[i];
+            in[i]=1;
+            stk.push_back(i);
+            dfs.push_back(i);
+
+            while(!dfs.empty()) {
+                int u=dfs.back();
+
+                if(cur[u]!=-1) {
+                    int e=cur[u];
+                    cur[u]=nxt[e];
+                    int v=to[e];
+
+                    if(!dfn[v]) {
+                        dfn[v]=low[v]=++timer;
+                        cur[v]=head[v];
+                        in[v]=1;
+                        stk.push_back(v);
+                        dfs.push_back(v);
+                    }
+                    else if(in[v]) {
+                        low[u]=min(low[u],dfn[v]);
+                    }
+                }
+                else {
+                    dfs.pop_back();
+
+                    // 子节点处理完毕，更新父节点 low
+                    if(!dfs.empty()) {
+                        int p=dfs.back();
+                        low[p]=min(low[p],low[u]);
+                    }
+
+                    // 找到一个强连通分量
+                    if(low[u]==dfn[u]) {
+                        while(true) {
+                            int v=stk.back();
+                            stk.pop_back();
+                            in[v]=0;
+                            bel[v]=scc;
+                            if(v==u) break;
+                        }
+                        scc++;
+                    }
+                }
+            }
+        }
+
+        ans.assign(n,0);
+
+        for(int i=0;i<n;i++) {
+            // 正反文字在同一个 SCC 中，则无解
+            if(bel[pos(i)]==bel[neg(i)])
+                return false;
+
+            // 当前 Tarjan 按出栈顺序编号 SCC
+            // 编号较小的 SCC 在拓扑关系中更靠近汇点
+            ans[i]=(bel[pos(i)]<bel[neg(i)]);
+        }
+
+        return true;
+    }
+};
+\end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线段树优化建图}
+
+\textbf{用法}：Graph G(n)，原点映射 a，SegGraph sg(G,a)，再 pointToRange/\allowbreak{}rangeToPoint/\allowbreak{}rangeToRange。\textbf{注意}：区间为 0-based 闭区间；本版无权辅助边只表达可达性，最短路版需补权值且辅助边权为 0。
+\begin{lstlisting}[language={C++}]
+#include<bits/stdc++.h>
+using namespace std;
+
+// 普通有向图，链式前向星
+struct Graph {
+    vector<int> head,to,nxt;
+
+    Graph(int n=0):head(n,-1){}
+
+    // 动态增加一个图节点，返回编号
+    int newNode() {
+        head.push_back(-1);
+        return (int)head.size()-1;
+    }
+
+    // 添加有向边 u -> v
+    void add(int u,int v) {
+        to.push_back(v);
+        nxt.push_back(head[u]);
+        head[u]=(int)to.size()-1;
+    }
+
+    int size() {
+        return head.size();
+    }
+};
+
+// 线段树优化建图，区间采用 0-based 闭区间
+struct SegGraph {
+    int n,S;
+    vector<int> down,up;
+    Graph &G;
+
+    // 普通建图：每个位置只有一个对应的原图节点
+    SegGraph(Graph &G,const vector<int>&a)
+        :SegGraph(G,a,
+        a){}
+
+    // 自定义区间出发节点和到达节点
+    // from[i]：区间位置 i 向外连边时的起点
+    // to[i]：外部节点连向区间位置 i 时的终点
+    //有映射关系时使用
+    SegGraph(Graph &G,const vector<int>&from,
+const vector<int>&to):G(G) {
+
+        n=from.size();
+        S=1;
+        while(S<n) S<<=1;
+
+        down.resize(S*2);
+        up.resize(S*2);
+
+        // 创建两棵线段树的辅助图节点
+        for(int i=1;i<S*2;i++) {
+            down[i]=G.newNode();
+            up[i]=G.newNode();
+        }
+
+        for(int i=1;i<S;i++) {
+            // 第一棵树：父 -> 子，用于点 -> 区间
+            G.add(down[i],down[i<<1]);
+            G.add(down[i],down[i<<1|1]);
+
+            // 第二棵树：子 -> 父，用于区间 -> 点
+            G.add(up[i<<1],up[i]);
+            G.add(up[i<<1|1],up[i]);
+        }
+
+        // 连接线段树叶子和原图节点
+        for(int i=0;i<n;i++) {
+            G.add(down[S+i],to[i]);
+            G.add(from[i],up[S+i]);
+        }
+    }
+
+    // u -> 区间 [l,r]
+    void pointToRange(int u,int l,int r) {
+        l+=S;
+        r+=S+1;
+
+        while(l<r) {
+            if(l&1) G.add(u,down[l++]);
+            if(r&1) G.add(u,down[--r]);
+            l>>=1;
+            r>>=1;
+        }
+    }
+
+    // 区间 [l,r] -> u
+    void rangeToPoint(int l,int r,int u) {
+        l+=S;
+        r+=S+1;
+
+        while(l<r) {
+            if(l&1) G.add(up[l++],u);
+            if(r&1) G.add(up[--r],u);
+            l>>=1;
+            r>>=1;
+        }
+    }
+
+    // 区间 [l1,r1] -> 区间 [l2,r2]
+    // 创建一个中转节点，连接两个区间
+    void rangeToRange(int l1,int r1,int l2,int r2) {
+        int u=G.newNode();
+        rangeToPoint(l1,r1,u);
+        pointToRange(u,l2,r2);
+    }
+};
+\end{lstlisting}
+\Needspace{5\baselineskip}
 \section{数学}
 
-\algo{线性筛}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线性筛}
+
+\textbf{用法}：先 sieve(\allowbreak{}n)，返回质数并构建 mP；再 factorize(x) 返回“质因子→指数”。\textbf{注意}：n>\allowbreak{}=\allowbreak{}1、1<\allowbreak{}=\allowbreak{}x<\allowbreak{}=\allowbreak{}n，多测重新筛，旧 mP 会被覆盖。筛 O(n)，分解 O(log x)。
+
+\begin{lstlisting}[language={C++}]
+vector<int> mP;
 vector<int> sieve(int n)
 {
 	vector<bool> vis(n+1);
-    vector<int> mP(n+1,1);
+    mP.assign(n+1,1);
 	vector<int> prime;
 	vis[1] = 1;
 	for (int i = 2; i <= n; ++i) {
@@ -3694,7 +4301,7 @@ vector<int> sieve(int n)
             mP[i] = i;
         }
 		for (auto p: prime) {
-			if (i*p > n) { break; }
+			if (1LL*i*p > n) { break; }
 			vis[i*p] = 1;
             mP[i*p] = p;
 			if (i%p == 0) { break; }  // 线性筛关键优化
@@ -3703,15 +4310,23 @@ vector<int> sieve(int n)
 	return prime;
 }
 
-// 分解质因数
-map<int,int> cnt;
-for (int y = x; y > 1; y /= mP[y]) {
-    ++cnt[mP[y]];
+// 分解质因数，先调用 sieve
+map<int,int> factorize(int x) {
+    assert(1 <= x && x < (int)mP.size());
+    map<int,int> cnt;
+    for (int y = x; y > 1; y /= mP[y]) {
+        ++cnt[mP[y]];
+    }
+    return cnt;
 }
 \end{lstlisting}
 
-\algo{因数}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{因数}
+
+\textbf{用法}：getFactors(\allowbreak{}x) 返回所有正因数（未排序），x>\allowbreak{}=\allowbreak{}1；x=\allowbreak{}1 返回 \{1\}。\textbf{复杂度}：试除 O(sqrt(x)) 加生成因数；大量查询可改为预筛最小质因子。
+
+\begin{lstlisting}[language={C++}]
 // const int X=1e5;
 // vector<int> fac[X+5];
 // for (int i = 1; i <= X; ++i) {
@@ -3722,7 +4337,7 @@ for (int y = x; y > 1; y /= mP[y]) {
 vector<int> getFactors(int x){
     vector<pair<int,int>> fac;
 
-    for(int p=2;p*p<=x;p++){
+    for(int p=2;1LL*p*p<=x;p++){
         if(x%p!=0) continue;
 
         int cnt=0;
@@ -3753,10 +4368,14 @@ vector<int> getFactors(int x){
 
     return factors;
 }
-\end{lstlisting}
 
-\algo{拉格朗日插值}
-\begin{lstlisting}
+\end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{拉格朗日插值}
+
+\textbf{用法}：lagrange\_\allowbreak{}interpolation(\allowbreak{}x,\allowbreak{}y) 返回按低次到高次存储的系数；Horner 法求 f(k)。\textbf{注意}：x/\allowbreak{}y 等长，模 MOD 的 x 两两不同；x/\allowbreak{}y/\allowbreak{}k 先规范化到 [0,MOD)，总时间 O(n²+n log MOD)。
+
+\begin{lstlisting}[language={C++}]
 #include <iostream>
 #include <vector>
 constexpr int MOD = 998244353;
@@ -3819,8 +4438,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{快速幂与乘法逆元}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{快速幂与乘法逆元}
+
+\textbf{用法}：qpow(a,b) 求模幂，qpow(a) 用费马小定理求逆元；Exgcd 求 ax+\allowbreak{}py=\allowbreak{}gcd(\allowbreak{}a,\allowbreak{}p)。\textbf{注意}：费马逆元要求质数模且 a 非零，一般逆元要求 gcd=\allowbreak{}1；线性逆元公式需质数模、i<\allowbreak{}p。
+
+\begin{lstlisting}[language={C++}]
 const int MOD=998244353;
 ll qpow(ll a, ll b=MOD-2)
 {   // 快速幂函数，x 的乘法逆元为 qpow(x)
@@ -3839,15 +4462,20 @@ int main() {
     ll x, y;
     Exgcd (a, p, x, y);
     x = (x % p + p) % p;
-    printf ("%d\n", x); //x是a在mod p下的逆元
+    printf ("%lld\n", x); //x是a在mod p下的逆元
 }
 inv[1] = 1;
 for(int i = 2; i < p; ++ i)
     inv[i] = (p - p / i) * inv[p % i] % p;
+
 \end{lstlisting}
 
-\algo{中国剩余定理}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{中国剩余定理}
+
+\textbf{用法}：CRT(\allowbreak{}k,\allowbreak{}a,\allowbreak{}r)，数组下标 1..k，解 x≡a[i] (mod r[i])。\textbf{注意}：本版要求模数两两互质且 >0；依赖 exgcd，模数乘积及中间乘法可能溢出，非互质需 EXCRT。
+
+\begin{lstlisting}[language={C++}]
 LL CRT(int k, LL* a, LL* r) {
   LL n = 1, ans = 0;
   for (int i = 1; i <= k; i++) n = n * r[i];
@@ -3860,8 +4488,13 @@ LL CRT(int k, LL* a, LL* r) {
 }
 \end{lstlisting}
 
-\algo{扩展欧几里得}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{扩展欧几里得}
+
+\textbf{用法}：本块保留的仍是 CRT 代码；exgcd 的实现见“快速幂与乘法逆元”的 Exgcd，使用时统一函数名/别名。\textbf{注意}：ax+\allowbreak{}by=\allowbreak{}gcd(\allowbreak{}a,\allowbreak{}b)，只有 gcd=1 才能取模逆。
+
+\begin{lstlisting}[language={C++}]
+
 LL CRT(int k, LL* a, LL* r) {
   LL n = 1, ans = 0;
   for (int i = 1; i <= k; i++) n = n * r[i];
@@ -3872,23 +4505,41 @@ LL CRT(int k, LL* a, LL* r) {
   }
   return (ans % n + n) % n;
 }
-\end{lstlisting}
 
-\algo{排列组合数}
-\begin{lstlisting}
+\end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{排列组合数}
+
+\textbf{用法}：先 init\_\allowbreak{}comb(\allowbreak{}limit)，再 C(\allowbreak{}n,\allowbreak{}k)\allowbreak{}/\allowbreak{}P(\allowbreak{}n,\allowbreak{}k)，要求 n<=limit；非法 k 返回 0。\textbf{注意}：依赖质数 MOD 与 qpow，limit<\allowbreak{}MOD；预处理 O(limit log MOD)，每次查询 O(1)。
+
+\begin{lstlisting}[language={C++}]
 const int N=1e5;
 ll fac[N+5], Inv[N+5];
-ll C(ll n, ll k) { return n==0? 1: fac[n] * Inv[k] % MOD * Inv[n-k] % MOD; }
-ll P(ll n, ll k) { return n==0? 1: fac[n] * Inv[n-k] % MOD; }
-// 预处理阶乘和阶乘的逆元
-for (int i = 1; i <= N; ++i) {
-	fac[i] = fac[i-1] * i % MOD;
-	Inv[i] = qpow(fac[i]); 
+ll C(ll n, ll k) {
+    if (n < 0 || k < 0 || k > n) { return 0; }
+    return fac[n] * Inv[k] % MOD * Inv[n-k] % MOD;
+}
+ll P(ll n, ll k) {
+    if (n < 0 || k < 0 || k > n) { return 0; }
+    return fac[n] * Inv[n-k] % MOD;
+}
+// 预处理阶乘和逆阶乘；依赖质数 MOD 与 qpow，limit < MOD
+void init_comb(int limit = N) {
+    assert(0 <= limit && limit <= N && limit < MOD);
+    fac[0] = Inv[0] = 1;
+    for (int i = 1; i <= limit; ++i) {
+        fac[i] = fac[i-1] * i % MOD;
+        Inv[i] = qpow(fac[i]);
+    }
 }
 \end{lstlisting}
 
-\algo{Lucas}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Lucas}
+
+\textbf{用法}：lucas(a,b) 求大 n 的组合数模 MOD。\textbf{注意}：MOD 必须为质数；依赖同模数 qpow，单个小组合数为 O(b)，MOD 较大或大量查询需预处理。
+
+\begin{lstlisting}[language={C++}]
 const int MOD = 1000003;
 ll C(ll a, ll b) {
 	if (a < b) { return 0; }
@@ -3900,18 +4551,26 @@ ll C(ll a, ll b) {
 	return up * qpow(down) % MOD;
 }
 ll lucas(ll a, ll b) {
-	if (a < p && b < p) { return C(a, b); }
+	if (a < MOD && b < MOD) { return C(a, b); }
 	return C(a%MOD, b%MOD) * lucas(a/MOD, b/MOD) % MOD;
 }
 \end{lstlisting}
 
-\algo{卡特兰数}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{卡特兰数}
+
+\textbf{用法}：Cat(\allowbreak{}n)\allowbreak{}=\allowbreak{}C(\allowbreak{}2n,\allowbreak{}n)\allowbreak{}/\allowbreak{}(\allowbreak{}n+\allowbreak{}1)，用于括号序列、栈序列等。\textbf{注意}：组合数预处理至少到 2n，n+1 模 MOD 非零才可除；不可逆时用 C(\allowbreak{}2n,\allowbreak{}n)\allowbreak{}-\allowbreak{}C(\allowbreak{}2n,\allowbreak{}n+\allowbreak{}1)。
+
+\begin{lstlisting}[language={C++}]
 ll Cat(ll n) { return C(2*n, n) * qpow(n+1) % MOD; }
 \end{lstlisting}
 
-\algo{数论分块}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{数论分块}
+
+\textbf{用法}：l 从 1 开始，r=\allowbreak{}n/\allowbreak{}(\allowbreak{}n/\allowbreak{}l)，在 [l,r] 内 floor(\allowbreak{}n/\allowbreak{}i) 相同，再 l=r+1。\textbf{注意}：多个整除式并用时取各自 r 的最小值，最后区间长度为 r-\allowbreak{}l+\allowbreak{}1。O(\allowbreak{}sqrt(\allowbreak{}n)\allowbreak{}) 块。
+
+\begin{lstlisting}[language={C++}]
 ll l=1, r=0;
 while (l <= n) {
     r = n / (n/l);
@@ -3920,8 +4579,12 @@ while (l <= n) {
 }
 \end{lstlisting}
 
-\algo{高斯消元}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{高斯消元}
+
+\textbf{用法}：Guess(a)，a 为 n 行 n+1 列增广矩阵；返回 0 唯一解、1 无穷多解、2 无解，唯一解存最后一列。\textbf{注意}：会修改矩阵，需 db 与基于 eps 的 sgn；整数/模数消元不能直接套用。O(\allowbreak{}n³)。
+
+\begin{lstlisting}[language={C++}]
 int Guess(vector<vector<db>> &a)
 {
 	int n = a.size();
@@ -3968,8 +4631,12 @@ int Guess(vector<vector<db>> &a)
 }
 \end{lstlisting}
 
-\algo{矩阵快速幂}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{矩阵快速幂}
+
+\textbf{用法}：qpow(\allowbreak{}A,\allowbreak{}b)，b>\allowbreak{}=\allowbreak{}0，A 为非空方阵；矩阵乘法支持相容矩形矩阵，依赖模加 add 与模乘 mul。\textbf{注意}：状态向量采用行/列形式须与转移矩阵一致。O(\allowbreak{}d³ log b)。
+
+\begin{lstlisting}[language={C++}]
 using matrix = vector<vector<ll>>;
 matrix IM(int n) {
     matrix I(n, vector<ll>(n));
@@ -3979,7 +4646,7 @@ matrix IM(int n) {
 matrix operator* (matrix A, matrix B) {
     assert(A.front().size() == B.size());
     int n = A.size(), m = B.size(), k = B.front().size();
-    matrix C(n, vector<ll>(m));
+    matrix C(n, vector<ll>(k));
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < k; ++j) {
             for (int x = 0; x < m; ++x) {
@@ -3998,8 +4665,12 @@ matrix qpow(matrix a, ll b) {
 }
 \end{lstlisting}
 
-\algo{自适应辛普森法}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{自适应辛普森法}
+
+\textbf{用法}：定义被积函数 f，calc(\allowbreak{}l,\allowbreak{}r,\allowbreak{}eps) 估计定积分。\textbf{注意}：step 是最小细分深度，不是递归上限；尖点/奇点先分段，eps 必须为正，极端情况应另设递归上限。
+
+\begin{lstlisting}[language={C++}]
 double simpson(double l, double r) {
     double mid = (l + r) / 2;
     return (r - l) * (f(l) + 4 * f(mid) + f(r)) / 6;  // 辛普森公式
@@ -4020,8 +4691,12 @@ double calc(double l, double r, double eps) {
 }
 \end{lstlisting}
 
-\algo{多项式}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{多项式}
+
+\textbf{用法}：Poly 按低次到高次存系数，operator* 做实数 FFT 卷积；依赖 db、ll、cp。\textbf{注意}：非空多项式，变换长度为 2 的幂且<\allowbreak{}=\allowbreak{}2\textasciicircum{}21，结果须在 int 范围内，浮点误差大时用 NTT。
+
+\begin{lstlisting}[language={C++}]
 struct cp {
     db x, y;
     cp(db real=0, db imag=0): x(real), y(imag) { };
@@ -4085,7 +4760,7 @@ namespace FFT {
 namespace Polynomial {
     void DFT(vcp &a) { FFT::DIF(a.data(), a.size()); }
     void IDFT(vcp &a) { FFT::IDIT(a.data(), a.size()); }
-    int norm(int n) { return 1 << (__lg(n-1) + 1); }
+    int norm(int n) { return n <= 1 ? 1 : 1 << (__lg(n-1) + 1); }
     vcp &dot(vcp &a, vcp &b) {
         for (int i = 0; i < int(a.size()); ++i) {
             a[i] = a[i] * b[i];
@@ -4115,7 +4790,7 @@ namespace Polynomial {
         IDFT(c);
         a.resize(n);
         for (int i = 0; i < n; ++i) {
-            a[i] = int(c[i].y * 0.5 + 0.5);
+            a[i] = int(llround(c[i].y * 0.5));
         }
         return a;
     }
@@ -4123,23 +4798,31 @@ namespace Polynomial {
 using namespace Polynomial;
 \end{lstlisting}
 
-\algo{快速幂}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{快速幂}
+
+\textbf{用法}：qmi(m,k,p) 求 m\textasciicircum{}k mod p，k>\allowbreak{}=\allowbreak{}0、p>\allowbreak{}0；此版模数/指数均为 int。复杂度 O(log k)；更大模数用 ll/\allowbreak{}i128 乘法。
+
+\begin{lstlisting}[language={C++}]
 int qmi(int m, int k, int p)
 {
-    int res = 1 % p, t = m;
+    int res = 1 % p, t = (m % p + 1LL * p) % p;
     while (k)
     {
-        if (k&1) res = res * t % p;
-        t = t * t % p;
+        if (k&1) res = 1LL * res * t % p;
+        t = 1LL * t * t % p;
         k >>= 1;
     }
     return res;
 }
 \end{lstlisting}
 
-\algo{乘法逆元}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{乘法逆元}
+
+\textbf{用法}：fpm(\allowbreak{}a,\allowbreak{}p-\allowbreak{}2,\allowbreak{}p) 求逆元。\textbf{注意}：p 为质数且 a\%p!=0；打印 1..n 的逆元需 n<p，0 不存在逆元；复合模改用 exgcd。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -4162,8 +4845,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{组合数求法}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{组合数求法}
+
+\textbf{用法}：lucas(\allowbreak{}a,\allowbreak{}b,\allowbreak{}p)，拆分 p 进制位并用 C 计算小组合数。\textbf{注意}：p 必须为质数；此实现每项单独求逆，大 p/多查询可能超时，优先预处理阶乘。
+
+\begin{lstlisting}[language={C++}]
 #include <iostream>
 
 using namespace std;
@@ -4216,8 +4903,12 @@ int main()
 }
 \end{lstlisting}
 
-\algo{线性基}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线性基}
+
+\textbf{用法}：insert(x) 插入，check(x) 判能否异或表示，mx/\allowbreak{}mn 求最大/最小非零异或；merge(\allowbreak{}A,\allowbreak{}B) 把 A 合入 B（修改 B）。\textbf{注意}：place 预清零，离线 insert 会改 num；有符号版最大值仅用于非负 63 位整数，全 64 位请改 ull。
+
+\begin{lstlisting}[language={C++}]
 //普通消元法
 void insert(long long x)
 {
@@ -4227,7 +4918,7 @@ void insert(long long x)
         else x^=place[i];
     }
 }
-void insert(int *num)
+void insert(long long *num)
 {
     for(int j=63;~j;j--)
     {
@@ -4248,7 +4939,7 @@ bool check(long long x)
 }
 struct Base
 {
-    long long place[N];
+    long long place[64]{};
     void insert(long long x)
     {
         for(int i=63;~i;i--) if((x>>i)&1ll)
@@ -4279,8 +4970,12 @@ long long mn()
 }
 \end{lstlisting}
 
-\algo{矩阵快速幂及高斯消元}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{矩阵快速幂及高斯消元}
+
+\textbf{用法}：当前块实际仅有矩阵快速幂，power(\allowbreak{}A,\allowbreak{}p) 返回 A\textasciicircum{}p，Matrix 为 1-based。\textbf{注意}：矩阵维度须匹配，p>\allowbreak{}=\allowbreak{}0；高斯消元请使用前面的独立条目。
+
+\begin{lstlisting}[language={C++}]
 // 1.矩阵快速幂
 #include <bits/stdc++.h>
 using namespace std; 
@@ -4345,8 +5040,12 @@ signed main(){
 }
 \end{lstlisting}
 
-\algo{线性筛求质因子个数（Omega函数）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线性筛求质因子个数（Omega函数）}
+
+\textbf{用法}：先调用 sieve\_\allowbreak{}omega(\allowbreak{}n)；omega[x] 为计重的质因子数，如 omega[12]=3。\textbf{注意}：不同质因子数需另算；多测清空质数表、标记和计数，内存按 n 估算。筛法 O(n)。
+
+\begin{lstlisting}[language={C++}]
 const int MAXN = 1e7 + 10;
 vector<int> primes;
 vector<int> omega(MAXN, 0);
@@ -4365,9 +5064,12 @@ void sieve_omega(int n) {
     }
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{线性筛(O(n))}
 
-\algo{线性筛(O(n))}
-\begin{lstlisting}
+\textbf{用法}：运行片段得到 prime 与最小质因子 minp。\textbf{注意}：1 不是质数，分解时仅对 x>1 访问 minp；片段应放函数体内，i*p 判断先用 ll。
+
+\begin{lstlisting}[language={C++}]
 int n = 100;
 vector<int> minp(n + 1, 0), prime;
 //minp存的是该数的最小质因数
@@ -4377,15 +5079,19 @@ for(int i = 2; i <= n; i++){
  prime.push_back(i);
  }
  for(auto p : prime){
-    if(i * p > n) break;
+    if(1LL * i * p > n) break;
     minp[i * p] = p;
     if(minp[i] == p) break;
  }
 }
 \end{lstlisting}
 
-\algo{位运算的部分性质}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{位运算的部分性质}
+
+\textbf{注意}：此块是代数速查，不是可直接编译的 C+\allowbreak{}+；表达式比较时给位运算加括号，\textasciicircum{} 表示异或而非乘方，>>> 不是 C++ 运算符。补码/位宽恒等式须区分数学整数与无符号模 2\textasciicircum{}w 运算。
+
+\begin{lstlisting}[language={C++}]
 1. 基本代数性质
 交换律
 c
@@ -4609,9 +5315,13 @@ x && y == x & y
 x || y == x | y
 !x == x ^ 1 == 1 - x
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{builtin}
 
-\algo{builtin}
-\begin{lstlisting}
+\textbf{注意}：clz/\allowbreak{}ctz 的参数不能为 0；32/\allowbreak{}64 位选对应后缀；GCC 扩展，C++20 可用 bit 头文件里的 popcount/\allowbreak{}countl\_\allowbreak{}zero/\allowbreak{}countr\_\allowbreak{}zero。
+
+\begin{lstlisting}[language={C++}]
+
 函数	功能	竞赛用途	典型代码
 __builtin_popcount(x)	统计 32 位整数中 1 的个数	状压 DP、枚举子集、判断 2 的幂	int c = __builtin_popcount(mask);
 __builtin_popcountll(x)	统计 64 位整数中 1 的个数	64 位掩码统计	int c = __builtin_popcountll(mask);
@@ -4625,10 +5335,534 @@ __builtin_parity(x)	判断 1 的个数奇偶性	奇偶校验	int p = __builtin_p
 __builtin_parityll(x)	64 位版 parity	64 位奇偶校验	int p = __builtin_parityll(mask);
 \end{lstlisting}
 
+\Needspace{5\baselineskip}
+\section{组合数恒等式}
+
+{\small\color{muted}默认规定：当 $k<0$ 或 $k>n$ 时，$\binom nk=0$。}\par
+
+\Needspace{5\baselineskip}
+\subsection{1. 范德蒙德卷积}
+
+\textbf{用法}：组合数乘积求和先改成互补下标 n-k；平移 k+r 与 k-r 的右侧符号相反。\textbf{注意}：a/\allowbreak{}b 非负整数，越界下标的项按 0 处理。
+
+\fitmath{
+\boxed{\sum_k\binom ak\binom b{n-k}=\binom{a+b}{n}}
+}
+
+常见变形：
+
+\fitmath{
+\boxed{\sum_k\binom ak\binom bk=\binom{a+b}{a}}
+}
+
+\fitmath{
+\boxed{\sum_k\binom ak\binom b{k+r}
+=\binom{a+b}{a+r}}
+}
+
+\fitmath{
+\boxed{\sum_k\binom ak\binom b{k-r}
+=\binom{a+b}{a-r}}
+}
+
+更一般地：
+
+\fitmath{
+\boxed{
+\sum_k\binom ak\binom b{c-k}
+=\binom{a+b}{c}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{2. 按位置拆分}
+
+\textbf{注意}：带 2\textasciicircum{}(n-r-s) 的形式要求 0<=r,s 且 r+\allowbreak{}s<\allowbreak{}=\allowbreak{}n；不满足时原和为 0，不要在程序中计算负指数。
+
+\fitmath{
+\boxed{
+\sum_k
+\binom nk
+\binom{k}{r}
+=
+\binom nr\,2^{n-r}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_k
+\binom nk
+\binom{n-k}{r}
+=
+\binom nr\,2^{n-r}
+}
+}
+
+更重要的统一形式：
+
+\fitmath{
+\boxed{
+\sum_k
+\binom nk
+\binom{k}{r}
+\binom{n-k}{s}
+=
+\binom{n}{r}
+\binom{n-r}{s}
+2^{n-r-s}
+}
+}
+
+以及：
+
+\fitmath{
+\boxed{
+\sum_k
+\binom{k}{r}\binom{n-k}{s}
+=
+\binom{n+1}{r+s+1}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{3. Hockey-stick}
+
+\textbf{用法}：固定下标、上标连续增长时套用；有限求和范围必须与公式一致。\textbf{注意}：本块“带权形式”原内容仍为同一无权恒等式，不要误认为包含 k 权重。
+
+\fitmath{
+\boxed{
+\sum_{k=r}^{n}\binom{k}{r}
+=
+\binom{n+1}{r+1}
+}
+}
+
+带权形式：
+
+\fitmath{
+\boxed{
+\sum_{k=r}^{n}
+\binom{k}{r}
+=
+\binom{n+1}{r+1}
+}
+}
+
+常用变形：
+
+\fitmath{
+\boxed{
+\sum_{k=0}^{n}
+\binom{k+r}{r}
+=
+\binom{n+r+1}{r+1}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{\texorpdfstring{4. 带 $k$ 的组合数}{4. 带 k 的组合数}}
+
+\fitmath{
+\boxed{
+k\binom nk
+=
+n\binom{n-1}{k-1}
+}
+}
+
+\fitmath{
+\boxed{
+k(k-1)\binom nk
+=
+n(n-1)\binom{n-2}{k-2}
+}
+}
+
+一般形式：
+
+\fitmath{
+\boxed{
+k^{\underline r}\binom nk
+=
+n^{\underline r}
+\binom{n-r}{k-r}
+}
+}
+
+其中：
+
+\fitmath{
+x^{\underline r}=x(x-1)\cdots(x-r+1).
+}
+
+因此：
+
+\fitmath{
+\boxed{
+\sum_k k^{\underline r}\binom nk
+=
+n^{\underline r}2^{n-r}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{5. 普通幂与组合数}
+
+\textbf{注意}：这些等式按整数/有理数成立；小 n 使 2 的指数为负时单独计算或用逆元（模数须为奇数），别传负指数给快速幂。
+
+\fitmath{
+\boxed{
+\sum_k k\binom nk
+=
+n2^{n-1}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_k k^2\binom nk
+=
+n(n+1)2^{n-2}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_k k^3\binom nk
+=
+n^2(n+3)2^{n-3}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_k k^4\binom nk
+=
+n(n^3+6n^2+3n-2)2^{n-4}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{6. 交错和}
+
+\fitmath{
+\boxed{
+\sum_{k=0}^{n}(-1)^k\binom nk x^k
+=
+(1-x)^n
+}
+}
+
+特别地：
+
+\fitmath{
+\boxed{
+\sum_{k=0}^{n}(-1)^k\binom nk=0
+\qquad(n>0)
+}
+}
+
+带权形式：
+
+\fitmath{
+\boxed{
+\sum_k(-1)^k k^{\underline r}\binom nk
+=
+\begin{cases}
+0,&r<n,\\
+(-1)^n n!,&r=n.
+\end{cases}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{7. 偶数项 / 奇数项}
+
+\textbf{注意}：等分公式要求 n>0，n=0 时偶数项和为 1、奇数项和为 0；带符号三角公式是精确恒等式，不宜直接用浮点取模。
+
+\fitmath{
+\boxed{
+\sum_k\binom n{2k}
+=
+\sum_k\binom n{2k+1}
+=
+2^{n-1}
+\qquad(n>0)
+}
+}
+
+带符号：
+
+\fitmath{
+\boxed{
+\sum_k(-1)^k\binom n{2k}
+=
+2^{n/2}\cos\frac{n\pi}{4}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_k(-1)^k\binom n{2k+1}
+=
+2^{n/2}\sin\frac{n\pi}{4}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{8. 相邻组合数乘积}
+
+\fitmath{
+\boxed{
+\binom nk\binom{k}{r}
+=
+\binom nr\binom{n-r}{k-r}
+}
+}
+
+\fitmath{
+\boxed{
+\binom nk\binom{n-k}{r}
+=
+\binom{n}{r}\binom{n-r}{k}
+}
+}
+
+\fitmath{
+\boxed{
+\binom nk\binom{n-k}{r}
+=
+\binom{n}{k+r}\binom{k+r}{k}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{9. Vandermonde 的中位数型}
+
+这类式子与“Median Equals X”中的形式直接相关：
+
+\fitmath{
+\boxed{
+\sum_{x}
+\binom{i-1}{x}
+\binom{n-i}{x}
+=
+\binom{n-1}{i-1}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_x
+\binom{i-1}{x}
+\binom{n-j+1}{x+1}
+=
+\binom{n-j+i}{n-j}
+}
+}
+
+更一般：
+
+\fitmath{
+\boxed{
+\sum_x
+\binom{A}{x}
+\binom{B}{x+r}
+=
+\binom{A+B}{A+r}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{10. 三重 / 多重卷积}
+
+\fitmath{
+\boxed{
+\sum_{i+j+k=n}
+\binom ai\binom bj\binom ck
+=
+\binom{a+b+c}{n}
+}
+}
+
+一般形式：
+
+\fitmath{
+\boxed{
+\sum_{x_1+\cdots+x_m=n}
+\prod_{i=1}^{m}
+\binom{a_i}{x_i}
+=
+\binom{\sum_i a_i}{n}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{11. 平移卷积}
+
+\fitmath{
+\boxed{
+\sum_k
+\binom{a}{k}
+\binom{b}{k+r}
+=
+\binom{a+b}{a+r}
+}
+}
+
+其中求和范围取使两个组合数有意义的 $k$。
+
+\Needspace{5\baselineskip}
+\subsection{12. 常用平方和}
+
+\fitmath{
+\boxed{
+\sum_{k=0}^{n}\binom nk^2
+=
+\binom{2n}{n}
+}
+}
+
+\fitmath{
+\boxed{
+\sum_k
+\binom nk
+\binom n{k+r}
+=
+\binom{2n}{n+r}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{13. 负上标组合数}
+
+\textbf{注意}：此处采用广义组合数，负上标不能按开头的普通越界约定置 0；n 为正整数、k>\allowbreak{}=\allowbreak{}0，先转换为非负上标再计算。
+
+竞赛中处理生成函数时常用：
+
+\fitmath{
+\boxed{
+\binom{-n}{k}
+=
+(-1)^k\binom{n+k-1}{k}
+}
+}
+
+从而：
+
+\fitmath{
+\boxed{
+\frac{1}{(1-x)^n}
+=
+\sum_{k\ge0}
+\binom{n+k-1}{k}x^k
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{14. 本题类型最值得记的三个}
+
+\Needspace{5\baselineskip}
+\subsubsection{奇数长度中位数}
+
+\fitmath{
+\boxed{
+\sum_x
+\binom{i-1}{x}
+\binom{n-i}{x}
+=
+\binom{n-1}{i-1}
+}
+}
+
+\Needspace{5\baselineskip}
+\subsubsection{偶数长度中位数}
+
+\fitmath{
+\boxed{
+\sum_x
+\binom{i-1}{x}
+\binom{n-j+1}{x+1}
+=
+\binom{n-j+i}{n-j}
+}
+}
+
+\Needspace{5\baselineskip}
+\subsubsection{统一卷积}
+
+\fitmath{
+\boxed{
+\sum_x
+\binom{A}{x}
+\binom{B}{x+r}
+=
+\binom{A+B}{A+r}
+}
+}
+
+\par\smallskip
+
+\Needspace{5\baselineskip}
+\subsection{15. 竞赛速查}
+
+\textbf{注意}：表中省略的求和范围沿用各正文公式；偶数项和要求 n>\allowbreak{}0，hockey-\allowbreak{}stick 固定 r 且 k 从 r 到 n。
+
+\par\smallskip{\footnotesize\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+形式 & 直接套用 \\
+\midrule
+$\sum\binom ak\binom b{n-k}$ & $\binom{a+b}{n}$ \\
+$\sum\binom ak\binom bk$ & $\binom{a+b}{a}$ \\
+$\sum\binom ak\binom b{k+r}$ & $\binom{a+b}{a+r}$ \\
+$\sum\binom nk^2$ & $\binom{2n}{n}$ \\
+$\sum\binom nk\binom n{k+r}$ & $\binom{2n}{n+r}$ \\
+$\sum\binom{k}{r}$ & $\binom{n+1}{r+1}$ \\
+$k\binom nk$ & $n\binom{n-1}{k-1}$ \\
+$k^{\underline r}\binom nk$ & $n^{\underline r}\binom{n-r}{k-r}$ \\
+$\sum k^{\underline r}\binom nk$ & $n^{\underline r}2^{n-r}$ \\
+$\sum(-1)^k\binom nkx^k$ & $(1-x)^n$ \\
+$\sum\binom{n}{2k}$ & $2^{n-1}$ \\
+$\sum\binom nk\binom{k}{r}$ & $\binom nr2^{n-r}$ \\
+$\sum\binom{k}{r}\binom{n-k}{s}$ & $\binom{n+1}{r+s+1}$ \\
+\bottomrule
+\end{tabularx}}\par\smallskip
+
+\Needspace{5\baselineskip}
 \section{字符串}
 
-\algo{前缀函数与KMP}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{前缀函数与KMP}
+
+\textbf{用法}：prefixFunction(\allowbreak{}s) 返回 1-based fail，fail[i] 是前 i 个字符的最长真 border；kmp 输出 1-based 匹配起点。\textbf{注意}：连接用分隔符 \# 必须不在原串中，模式串非空。O(\allowbreak{}n+\allowbreak{}m)。
+
+\begin{lstlisting}[language={C++}]
 vector<int> prefixFunction(string s)
 {   // fail : 1-index
     int n = s.length();
@@ -4656,8 +5890,12 @@ void kmp()
 }
 \end{lstlisting}
 
-\algo{Manacher}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Manacher}
+
+\textbf{用法}：按示例插入分隔符并加两种不同哨兵，manacher(\allowbreak{}t) 返回包含中心的半径，最大 d-1 为原串最长回文长度。\textbf{注意}：哨兵不能出现在输入中；直接传未处理原串会越界。O(\allowbreak{}n)。
+
+\begin{lstlisting}[language={C++}]
 vector<int> manacher(string s)
 {
     vector<int> d(s.length());
@@ -4688,8 +5926,12 @@ void solve()
 }
 \end{lstlisting}
 
-\algo{字符串哈希}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{字符串哈希}
+
+\textbf{用法}：Hash h(\allowbreak{}s)，get1(\allowbreak{}l,\allowbreak{}r) 求正向哈希，get2(\allowbreak{}l,\allowbreak{}r) 求反向哈希，二者相等可判回文；查询区间为 1-based 闭区间。\textbf{注意}：构造传入普通字符串；相同长度才比较，同底数/模数，双模仍可能碰撞。预处理 O(n)，查询 O(1)。
+
+\begin{lstlisting}[language={C++}]
 typedef pair<ll,ll> hs;
 const ll MOD1=1e9+7, MOD2=1e9+9;
 const hs p = { 117, 131 };
@@ -4730,8 +5972,12 @@ struct Hash {
 };
 \end{lstlisting}
 
-\algo{AC自动机}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{AC自动机}
+
+\textbf{用法}：add 插入所有模式并保存终点，work 建 fail，再从根 1 扫描主串并沿 fail 树汇总 cnt。\textbf{注意}：字符仅 a-z，work 仅调用一次；多测清 G/\allowbreak{}cnt，统计可包含重叠匹配。
+
+\begin{lstlisting}[language={C++}]
 struct AhoCorasick {
     static constexpr int ALPHABET = 26;
     struct Node {
@@ -4853,8 +6099,12 @@ void solve()
 }
 \end{lstlisting}
 
-\algo{后缀自动机SAM}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{后缀自动机SAM}
+
+\textbf{用法}：sam.clear() 后逐字符 extend(\allowbreak{}c-\allowbreak{}'a'+\allowbreak{}1)，get\_\allowbreak{}endpos 汇总出现次数；solve 求“重复子串长度×次数”最大值。\textbf{注意}：最多约 2|s| 个状态，大对象全局定义；get\_\allowbreak{}endpos 不能重复累加。
+
+\begin{lstlisting}[language={C++}]
 //edited by piaoyun from some other's code 
 //必须#define int long long 
 
@@ -4961,8 +6211,12 @@ void solve()
 }
 \end{lstlisting}
 
-\algo{KMP算法}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{KMP算法}
+
+\textbf{用法}：主串 s、模式 t，get\_nxt 生成 0-based 前缀函数，输出所有 1-based 匹配起点，再输出 nxt。\textbf{注意}：模式非空，完整匹配后回退 nxt[j-1] 保留重叠；O(n+m)。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 void get_nxt(string s, int nxt[]){
@@ -4988,19 +6242,25 @@ void solve(){
         if(s[i]==t[j]) j++;
         if(j==t.length()){
             cout<<i-t.length()+2<<endl;
+            j = nxt[j-1];  // 回退后继续匹配，允许重叠
         }
     }
     for (int i = 0; i < t.length(); i++){
         cout<<nxt[i]<<' ';
     }
+    delete[] nxt;
 }
 int main(){
     solve();
 }
 \end{lstlisting}
 
-\algo{Trie树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Trie树}
+
+\textbf{用法}：getidx 映射字母数字，insert 插入，查询时区分 pass 前缀数与 endp 完整串数。\textbf{注意}：根为 1，总节点数按字符总数估计；二维转移数组很大，多测需清已用节点。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 int tree[3000005][70],pass[3000005],endp[3000005],cnt=1;
@@ -5073,8 +6333,12 @@ void clear()
 }
 \end{lstlisting}
 
-\algo{string常用函数}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{string常用函数}
+
+\textbf{注意}：find 未找到返回 string:\allowbreak{}:\allowbreak{}npos（size\_\allowbreak{}t），不要强转 int 再判；substr(\allowbreak{}pos,\allowbreak{}len) 第二参是长度；tolower/\allowbreak{}toupper 先转 unsigned char，修改字符串可能使迭代器失效。
+
+\begin{lstlisting}[language={C++}]
 三、基本属性
 s.size();      // 长度（常用）
 s.length();    // 同 size()
@@ -5145,10 +6409,15 @@ for (char &c : s) c = tolower(c);
 int cnt = count(s.begin(), s.end(), 'a');
 \end{lstlisting}
 
+\Needspace{5\baselineskip}
 \section{动态规划}
 
-\algo{数位DP}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{数位DP}
+
+\textbf{用法}：f 初始化为 -\allowbreak{}1，query(\allowbreak{}b)\allowbreak{}-\allowbreak{}query(\allowbreak{}a-\allowbreak{}1) 统计相邻数字差至少 2 的数。\textbf{注意}：当前把 0 计为合法；只缓存非 limit、非前导零状态；改变限制条件须调整状态，范围按 ll。
+
+\begin{lstlisting}[language={C++}]
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
@@ -5202,8 +6471,12 @@ int main()
 }
 \end{lstlisting}
 
-\algo{单调队列优化（滑动窗口）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{单调队列优化（滑动窗口）}
+
+\textbf{用法}：定义 1-based a 与窗口长度 k，work(\allowbreak{}less<\allowbreak{}int>\allowbreak{}\{\}) 输出最小值，work(\allowbreak{}greater<\allowbreak{}int>\allowbreak{}\{\}) 输出最大值。\textbf{注意}：1<\allowbreak{}=\allowbreak{}k<\allowbreak{}=\allowbreak{}n，以编号移除过期元素；O(\allowbreak{}n) 时间、O(k) 空间。
+
+\begin{lstlisting}[language={C++}]
 auto work = [&](auto&& cmp) -> void {
 	deque<pair<int,int>> q;
 
@@ -5214,7 +6487,7 @@ auto work = [&](auto&& cmp) -> void {
 		q.emplace_back(id, x);
 	};
 
-	for (int i = 1; i <= k; ++i) {
+	for (int i = 1; i < k; ++i) {
 		update(i, a[i]);
 	}
 	for (int i = 1, j = i+k-1; j <= n; ++i, ++j) {
@@ -5225,8 +6498,12 @@ auto work = [&](auto&& cmp) -> void {
 };
 \end{lstlisting}
 
-\algo{无向图上回路计数}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{无向图上回路计数}
+
+\textbf{用法}：简单无向图，f[mask][i] 记录固定最小点为起点的路径数，再去边、除以 2 去方向重复。\textbf{注意}：只适合小 n（如 n<\allowbreak{}=\allowbreak{}19），不能含重边/自环；f/\allowbreak{}ans 用 ll。
+
+\begin{lstlisting}[language={C++}]
 // CF11D
 for (int i = 1; i <= n; ++i) {
 	f[1<<(i-1)][i] = 1;
@@ -5250,8 +6527,12 @@ for (int s = 0; s < (1<<n); ++s) {
 cout << (ans-m)/2 << "\n";  // 去除无向边，环正走反走算一个
 \end{lstlisting}
 
-\algo{SOSDP}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{SOSDP}
+
+\textbf{用法}：第一段累计子集和，第二段累计超集和；g 先复制原数组，状态 0..2\textasciicircum{}B-1。\textbf{注意}：两段二选一，不可无意连续作用同一 g；循环上界必须覆盖完整 B 位集合。O(\allowbreak{}B·2\textasciicircum{}B)。
+
+\begin{lstlisting}[language={C++}]
 for(int k=0;k<=19;k++)
         for(int i=0;i<=maxn;i++)
             if((i>>k)&1) g[i] += g[i^(1<<k)];   // i 是超集，有第 k 位
@@ -5260,8 +6541,12 @@ for(int k=0;k<=19;k++)
             if(!((i>>k)&1)) g[i] += g[i^(1<<k)];   // i 是子集，无第 k 位
 \end{lstlisting}
 
-\algo{树形DP}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{树形DP}
+
+\textbf{用法}：当前主程序解“正整数点权且每条边两端和为 w”，先 dfs 收缩可行区间，再 BFS 恢复；注释块为无上司舞会。\textbf{注意}：两个解法按题意选择，权值/边界范围按数据调整。O(\allowbreak{}n)。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 //#define int long long
 #define in(a) a = read_int()
@@ -5323,6 +6608,7 @@ signed main() {
 			int v = edge[i].v , w = edge[i].w;
 			if(ans[v]) continue;
 			ans[v] = w - ans[u]; // 递推求解
+            q.push(v);
 		}
 	}
 	cout<<"YES\n"; // 打印答案 
@@ -5374,8 +6660,12 @@ int main(){
 */
 \end{lstlisting}
 
-\algo{最长不下降子序列}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最长不下降子序列}
+
+\textbf{用法}：前半段离散化+线段树得到以 i 结尾的 LNDS 长度 dp[i]；后半段带 k 的合并为特定题解。\textbf{注意}：不下降查询 <\allowbreak{}=\allowbreak{}a[i]，严格上升查询 <\allowbreak{}a[i]；不能把整段当通用 LNDS。
+
+\begin{lstlisting}[language={C++}]
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
@@ -5435,10 +6725,15 @@ int main(){
 }
 \end{lstlisting}
 
+\Needspace{5\baselineskip}
 \section{计算几何}
 
-\algo{define}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{define}
+
+\textbf{用法}：整数几何选择 T=ll、精确 sgn；浮点几何选择 T=db 并启用 eps 版本 sgn。\textbf{注意}：后续截取使用时统一类型，不要重复定义 sgn。
+
+\begin{lstlisting}[language={C++}]
 using ll = long long;
 using db = double;
 using T = ll;   // 或者 double
@@ -5458,8 +6753,12 @@ int sgn(double x) {
 */
 \end{lstlisting}
 
-\algo{向量}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{向量}
+
+\textbf{用法}：Point/\allowbreak{}Vector 的 * 为点积，\textasciicircum{} 为叉积，len/\allowbreak{}ang 求长度/方向。\textbf{注意}：旋转、投影、缩放须用浮点 T，否则截断；trunc 不可传零向量，坐标乘积超 ll 时用 i128。
+
+\begin{lstlisting}[language={C++}]
 using T = ll;
 struct Point {
 	T x, y;
@@ -5489,8 +6788,12 @@ int toLeft(Point a, Point b, Point c) { return sgn((b-a)^(c-a)); }
 db getAngle(Vector a, Vector b) { return fabs(atan2(fabs(a^b), a*b)); }
 \end{lstlisting}
 
-\algo{点线操作}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{点线操作}
+
+\textbf{用法}：Line(a,b) 表示两端点确定的直线，onSegment/\allowbreak{}hasIntersection 判闭线段，proj/\allowbreak{}getIntersection 求投影与交点。\textbf{注意}：a!=\allowbreak{}b；投影/交点用浮点 T；本 isParallel 排除重合直线，重合需单独判。
+
+\begin{lstlisting}[language={C++}]
 struct Line {
     Point a, b;
     Vector v;
@@ -5550,8 +6853,12 @@ double distToSeg(Point p, Point a, Point b) {
 }
 \end{lstlisting}
 
-\algo{多边形与凸包}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{多边形与凸包}
+
+\textbf{用法}：先排序并去重再构造凸包，面积用相邻点叉积和/\allowbreak{}2。\textbf{注意}：是否保留边界共线点由弹栈条件决定；处理 0/\allowbreak{}1/\allowbreak{}2 点，整型叉积与浮点精度须分开。O(\allowbreak{}n log n)。
+
+\begin{lstlisting}[language={C++}]
 struct Polygon: vector<Point> {
     using vector<Point>::vector;  // 直接使用 vector 的构造函数
     size_t nxt(size_t i) { return i+1==size()? 0: i+1; }
@@ -5585,8 +6892,12 @@ struct Polygon: vector<Point> {
 };
 \end{lstlisting}
 
-\algo{计算几何模板}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{计算几何模板}
+
+\textbf{用法}：按需选择点线、圆、多边形相关函数，统一 eps 与 Point 类型。\textbf{注意}：输入退化情况（零长度、共线、相切）分别判；三角函数入参夹到 [-1,1]，避免 NaN。
+
+\begin{lstlisting}[language={C++}]
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -6387,10 +7698,14 @@ vector<long double> area_union(const vector<Circle> &circs)
 }
 \end{lstlisting}
 
+\Needspace{5\baselineskip}
 \section{其它}
+\Needspace{5\baselineskip}
+\subsection{二维差分与前缀和}
 
-\algo{二维差分与前缀和}
-\begin{lstlisting}
+\textbf{用法}：矩形 [x1,\allowbreak{}x2]×[y1,\allowbreak{}y2] 四角差分，再做二维前缀和恢复。\textbf{注意}：下标从 1 开始，数组多开一行一列；边界差分避免四个角重复，面积/累计值可能需 ll。
+
+\begin{lstlisting}[language={C++}]
 void cf(int x1,int y1,int x2,int y2){
     a[x1][y1]++;
     a[x2+1][y2+1]++;
@@ -6406,10 +7721,14 @@ cf(i+1,j+l,i+l-1,j+l);
 
 前缀和
 a[i][j] += a[i-1][j] + a[i][j-1] - a[i-1][j-1];
-\end{lstlisting}
 
-\algo{CDQ分治}
-\begin{lstlisting}
+\end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{CDQ分治}
+
+\textbf{用法}：prepare 按三维排序并处理重复点，cdq(\allowbreak{}1,\allowbreak{}n) 统计三维偏序，BIT 在第三维计数。\textbf{注意}：坐标第三维>\allowbreak{}=\allowbreak{}1，修改后必须撤销；<\allowbreak{}= 和重复点计数要保持一致。本版每层排序约 O(n log² n)。
+
+\begin{lstlisting}[language={C++}]
 //3810
 
 #include<bits/stdc++.h>
@@ -6489,9 +7808,12 @@ int main(){
     for(int i=0;i<n;i++) cout<<ans[i]<<endl;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{矩阵加速}
 
-\algo{矩阵加速}
-\begin{lstlisting}
+\textbf{用法}：当前主程序为 0/\allowbreak{}1 转移上的异或传播，预处理 wyx[i]，按步数二进制乘状态行向量。\textbf{注意}：这不是普通模加线性递推，支持的步数仅低 32 位；注释块才是普通递推例子。
+
+\begin{lstlisting}[language={C++}]
 //1939
 // #include <iostream>
 // #include <cstdio>
@@ -6608,9 +7930,12 @@ int main(){
 	return 0;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{cdq斜率优化}
 
-\algo{cdq斜率优化}
-\begin{lstlisting}
+\textbf{用法}：前缀 s[i]=\allowbreak{}sum(\allowbreak{}c[j]+\allowbreak{}1)，DP 为 f[i]=\allowbreak{}min(\allowbreak{}f[j]+\allowbreak{}(\allowbreak{}s[i]-\allowbreak{}s[j]-\allowbreak{}L)²)，f[0]=\allowbreak{}0 后 CDQ(0,n)。\textbf{注意}：这是原题递推，L 偏移按题意核对；交叉乘积用 i128，同斜率保留最小截距。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -6757,9 +8082,32 @@ int main(){
     return 0;
 }
 \end{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{并查集}
 
-\algo{并查集}
-\begin{lstlisting}
+\textbf{用法}：普通并查集用下列 dsu(\allowbreak{}n)，find/\allowbreak{}same/\allowbreak{}merge，节点为 1.\allowbreak{}.\allowbreak{}n；Kruskal、基环树可引用此封装。\textbf{注意}：不维护权差；路径压缩+按大小合并，单次均摊 O(α(n))。
+
+\begin{lstlisting}[language={C++}]
+struct dsu {
+    vector<int> f, siz;
+    dsu(int n = 0): f(n+1), siz(n+1,1) {
+        iota(f.begin(), f.end(), 0);
+    }
+    int find(int x) { return f[x] == x ? x : f[x] = find(f[x]); }
+    bool same(int x, int y) { return find(x) == find(y); }
+    bool merge(int x, int y) {
+        x = find(x); y = find(y);
+        if (x == y) { return false; }
+        if (siz[x] < siz[y]) { swap(x, y); }
+        f[y] = x; siz[x] += siz[y];
+        return true;
+    }
+};
+\end{lstlisting}
+
+下面保留“推导部分和”题解，利用并查集判断连通，在图上 BFS 计算势差；边方向与权值符号、head 的 -1 哨兵按原题初始化。
+
+\begin{lstlisting}[language={C++}]
 //推导部分和
 #include <bits/stdc++.h>
 using namespace std;
@@ -6826,8 +8174,12 @@ int main()
 }
 \end{lstlisting}
 
-\algo{FFT（快速傅里叶变换）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{FFT（快速傅里叶变换）}
+
+\textbf{用法}：按低次到高次填系数，补零到至少 n+m-1 的 2 次幂长度，变换、点乘、逆变换。\textbf{注意}：逆变换除长度、取整有误差；大系数/精确模运算优先 NTT。O(L log L)。
+
+\begin{lstlisting}[language={C++}]
 // 当vector用就可以了
 #include <bits/stdc++.h>
 #define fp(i, a, b) for (int i = (a), i##_ = (b) + 1; i < i##_; ++i)
@@ -6835,7 +8187,7 @@ int main()
 using namespace std;
 using ll = int64_t;
 using db = double;
-/*---------------------------------------------------------------------------*/
+/*----------------------------------------*/
 struct cp {
     db x, y;
     cp(db real = 0, db imag = 0) : x(real), y(imag) {};
@@ -6884,7 +8236,7 @@ namespace Polynomial {
 // basic operator
 void DFT(vcp &a) { FFT::DIF(a.data(), a.size()); }
 void IDFT(vcp &a) { FFT::IDIT(a.data(), a.size()); }
-int norm(int n) { return 1 << (__lg(n - 1) + 1); }
+int norm(int n) { return n <= 1 ? 1 : 1 << (__lg(n - 1) + 1); }
 
 // Poly mul
 vcp &dot(vcp &a, vcp &b) {
@@ -6908,17 +8260,21 @@ Poly operator*(Poly a, Poly b) {
     vcp c(norm(n));
     fp(i, 0, a.size() - 1) c[i].x = a[i];
     fp(i, 0, b.size() - 1) c[i].y = b[i];
-    DFT(c), dot(c, c), IDIT(c), a.resize(n);
-    fp(i, 0, n - 1) a[i] = int(c[i].y * .5 + .5);
+    DFT(c), dot(c, c), IDFT(c), a.resize(n);
+    fp(i, 0, n - 1) a[i] = int(llround(c[i].y * .5));
     return a;
 }
 }  // namespace Polynomial
-/*---------------------------------------------------------------------------*/
+/*----------------------------------------*/
 using namespace Polynomial;
 \end{lstlisting}
 
-\algo{NTT（数论变换）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{NTT（数论变换）}
+
+\textbf{用法}：系数先取模，长度补到卷积需要的 2 次幂，正变换点乘后逆变换。\textbf{注意}：本版根表 W 最长支持 2\textasciicircum{}21；998244353 理论可到 2\textasciicircum{}23，但须同步扩容根表，变换长度应整除 P-1。O(L log L)。
+
+\begin{lstlisting}[language={C++}]
 #include <bits/stdc++.h>
 #define fp(i, a, b) for (int i = (a), i##_ = (b) + 1; i < i##_; ++i)
 #define fd(i, a, b) for (int i = (a), i##_ = (b) - 1; i > i##_; --i)
@@ -6975,7 +8331,7 @@ Poly operator*(Poly a, int b) { return a *= b; }
 Poly operator*(int a, Poly b) { return b * a; }
 void DFT(Poly &a) { NTT::DIF(a.data(), a.size()); }
 void IDFT(Poly &a) { NTT::IDIT(a.data(), a.size()); }
-int norm(int n) { return 1 << (32 - __builtin_clz(n - 1)); }
+int norm(int n) { return n <= 1 ? 1 : 1 << (32 - __builtin_clz(n - 1)); }
 void norm(Poly &a) {
     if (!a.empty()) a.resize(norm(a.size()), 0);
 }
@@ -6999,8 +8355,12 @@ Poly operator*(Poly a, Poly b) {
 using namespace Polynomial;
 \end{lstlisting}
 
-\algo{扫描线算法}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{扫描线算法}
+
+\textbf{用法}：当前代码求天际线（轮廓），输入每个建筑的左端、高度、右端；离散化后用大根堆取最高建筑，输出轮廓转折点。\textbf{注意}：按整数坐标、半开区间 [l,r) 编写；不是矩形面积并，非整数坐标不可用 r-1。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -7065,8 +8425,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{最长上升子序列}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{最长上升子序列}
+
+\textbf{用法}：严格 LIS 的耐心排序用 lower\_bound 替换第一个 >=x 的尾值；非下降改 upper\_bound。\textbf{注意}：本条具体代码的附加判定按原题保留；只求长度时无需恢复完整序列。O(\allowbreak{}n log n)。
+
+\begin{lstlisting}[language={C++}]
 #include<cstdio>
 #include<algorithm>
 const int MAXN=200001;
@@ -7095,8 +8459,12 @@ int main()
 }
 \end{lstlisting}
 
-\algo{全排列输出}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{全排列输出}
+
+\textbf{用法}：先 sort，再 do/\allowbreak{}while(\allowbreak{}next\_\allowbreak{}permutation) 输出每个排列。\textbf{注意}：空序列有一个空排列；重复值仅输出不同排列，n! 增长很快，按题意过滤。
+
+\begin{lstlisting}[language={C++}]
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -7119,8 +8487,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{位运算用法}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{位运算用法}
+
+\textbf{注意}：64 位掩码使用 1ULL<<k 且 k<\allowbreak{}64；子集枚举通常不含 0，需另处理；按位判断加括号；此块夹有文字示例，不是完整程序。
+
+\begin{lstlisting}[language={C++}]
 /*为了更好的理解状压dp，首先介绍位运算相关的知识。
 
 '&'符号，x&y，会将两个十进制数在二进制下进行与运算(都1为1，其余为0） 然后返回其十进制下的值。例如3(11)&2(10)=2(10)。
@@ -7199,8 +8571,12 @@ int main() {
 }
 \end{lstlisting}
 
-\algo{Map的使用}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Map的使用}
+
+\textbf{用法}：map 支持按 key 有序查询，find/\allowbreak{}contains 查存在性，lower\_\allowbreak{}bound 找首个不小于 key。\textbf{注意}：operator[] 会插入缺失键，查询不想插入时用 find；每次操作 O(log n)。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 int main(){
@@ -7234,8 +8610,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{优先队列（堆）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{优先队列（堆）}
+
+\textbf{用法}：默认大根堆，greater<\allowbreak{}T> 为小根堆；top 后用 pop 删除。\textbf{注意}：空堆不能 top/\allowbreak{}pop，不支持任意删改；Dijkstra 用过期状态过滤。每次插入/弹出 O(log n)。
+
+\begin{lstlisting}[language={C++}]
 //自定义类的优先队列
 struct Student {
     std::string name;
@@ -7254,8 +8634,12 @@ priority_queue<int>q2;//默认大根堆
 priority_queue<int,vector<int>,greater<int>>q3;//小根堆
 \end{lstlisting}
 
-\algo{扫描线+线段树（矩形面积并）}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{扫描线+线段树（矩形面积并）}
+
+\textbf{用法}：本标题下原代码与“扫描线算法”相同，仍是堆维护天际线，已保留。\textbf{注意}：它不计算矩形面积并；真正面积并需维护区间覆盖长度，并累加“覆盖长度×相邻事件高度差”。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -7320,8 +8704,12 @@ int main(){
 }
 \end{lstlisting}
 
-\algo{建树参考}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{建树参考}
+
+\textbf{用法}：本块同“树形DP”主程序，已知树边两端点权之和，恢复一组正整数点权。\textbf{注意}：树结构从输入给定，不是构造树边；先 DFS 收缩区间，再 BFS 恢复所有点。
+
+\begin{lstlisting}[language={C++}]
 #include<bits/stdc++.h>
 //#define int long long
 #define in(a) a = read_int()
@@ -7392,8 +8780,12 @@ signed main() {
 }
 \end{lstlisting}
 
-\algo{Hash树}
-\begin{lstlisting}
+\Needspace{5\baselineskip}
+\subsection{Hash树}
+
+\textbf{用法}：DFS\_1 求子树哈希，DFS\_2 换根得到所有根的哈希，排序后比较树同构，并输出最早同构树编号。\textbf{注意}：这是固定质数权重的单模哈希，仍可能碰撞；点数和树数都须小于 N=60。
+
+\begin{lstlisting}[language={C++}]
 //树同构
 
 #include <bits/stdc++.h>
@@ -7504,5 +8896,4 @@ signed main() {
      return 0;
 }
 \end{lstlisting}
-
 \end{document}
